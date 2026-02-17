@@ -8,9 +8,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-gradient-to-r from-cineva-500 to-cineva-600 text-white shadow-md hover:from-cineva-600 hover:to-cineva-700 hover:shadow-lg active:scale-[0.98]",
-        secondary: "bg-slate-100 text-slate-700 hover:bg-slate-200",
+        secondary: "bg-stone-100 text-stone-700 hover:bg-stone-200",
         outline: "border-2 border-cineva-300 text-cineva-700 hover:bg-cineva-50",
-        ghost: "text-slate-600 hover:bg-slate-100",
+        ghost: "text-stone-600 hover:bg-stone-100",
         coral: "bg-coral-500 text-white shadow-md hover:bg-coral-600 hover:shadow-lg active:scale-[0.98]",
       },
       size: {

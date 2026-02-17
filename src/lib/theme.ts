@@ -41,3 +41,13 @@ export const coral = {
   500: '#e8587a',
   600: '#dc2666',
 }
+
+export const amber = {
+  50: '#fefdf5',
+  100: '#fdf8e1',
+  200: '#fcefc3',
+  300: '#f9e29b',
+  400: '#f5ce5c',
+  500: '#e8b230',
+  600: '#c4912a',
+}

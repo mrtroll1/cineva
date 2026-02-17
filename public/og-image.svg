@@ -1,19 +1,16 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect width="1200" height="630" fill="#faf9f6"/>
 
   <!-- Subtle background waves -->
   <path d="M0 380 C150 340, 300 340, 450 380 S750 420, 900 380 S1100 340, 1200 360" stroke="#3b6eb5" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.08"/>
   <path d="M0 420 C150 380, 300 380, 450 420 S750 460, 900 420 S1100 380, 1200 400" stroke="#3b6eb5" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.12"/>
   <path d="M0 460 C150 420, 300 420, 450 460 S750 500, 900 460 S1100 420, 1200 440" stroke="#3b6eb5" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.18"/>
 
-  <!-- Brand name with blue 'e' -->
-  <text x="600" y="250" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="96" letter-spacing="-2">
-    <tspan fill="#1e293b">cin</tspan><tspan fill="#3b6eb5">e</tspan><tspan fill="#1e293b">vá</tspan>
+  <!-- Brand name with amber 'e' -->
+  <text x="600" y="260" text-anchor="middle" font-family="DM Serif Display, Georgia, serif" font-weight="400" font-size="108" letter-spacing="-2">
+    <tspan fill="#292524">cin</tspan><tspan fill="#e8b230">e</tspan><tspan fill="#292524">vá</tspan>
   </text>
 
   <!-- Tagline -->
-  <text x="600" y="330" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="32" fill="#64748b">Find your cinema soulmate</text>
-
-  <!-- Accent line -->
-  <rect x="560" y="280" width="80" height="3" rx="1.5" fill="#3b6eb5" opacity="0.5"/>
+  <text x="600" y="340" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="30" fill="#78716c">Find your cinema soulmate</text>
 </svg>

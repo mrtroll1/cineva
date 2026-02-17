@@ -61,7 +61,7 @@ export function Feed({ onBack }: FeedProps) {
           <ArrowLeft className="h-4 w-4" />
           Profile
         </Button>
-        <h2 className="text-lg font-semibold text-slate-900">Discover</h2>
+        <h2 className="font-serif text-xl text-stone-800">Discover</h2>
         <div className="w-20" />
       </div>
 
@@ -69,9 +69,8 @@ export function Feed({ onBack }: FeedProps) {
         <div className="mx-auto w-full max-w-md flex-1 px-6 pb-6 flex flex-col">
           {/* Card area */}
           <div className="relative flex-1 min-h-0 max-h-[600px]">
-            {/* Background depth card — pointer-events-none so it never blocks clicks */}
             {currentIndex + 1 < matches.length && (
-              <div className="pointer-events-none absolute inset-0 top-2 rounded-3xl bg-slate-100 scale-[0.96] opacity-60" />
+              <div className="pointer-events-none absolute inset-0 top-2 rounded-3xl bg-stone-200/60 scale-[0.96]" />
             )}
 
             <AnimatePresence mode="wait">
@@ -79,22 +78,22 @@ export function Feed({ onBack }: FeedProps) {
             </AnimatePresence>
           </div>
 
-          {/* Action buttons — always accessible */}
+          {/* Action buttons */}
           <div className="flex items-center justify-center gap-6 py-5">
             <button
               type="button"
               onClick={handleSkip}
               disabled={isAnimating}
-              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-slate-200 bg-white transition-all hover:border-slate-300 hover:bg-slate-50 active:scale-95 disabled:opacity-40 cursor-pointer"
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-stone-200 bg-white transition-all hover:border-stone-300 hover:bg-stone-50 active:scale-95 disabled:opacity-40 cursor-pointer"
             >
-              <X className="h-6 w-6 text-slate-400" />
+              <X className="h-6 w-6 text-stone-400" />
             </button>
 
             <button
               type="button"
               onClick={handleLike}
               disabled={isAnimating}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-coral-400 to-coral-500 text-white shadow-lg shadow-coral-200 transition-all hover:shadow-xl active:scale-95 disabled:opacity-40 cursor-pointer"
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-cineva-400 to-cineva-600 text-white shadow-lg shadow-cineva-200 transition-all hover:shadow-xl active:scale-95 disabled:opacity-40 cursor-pointer"
             >
               <Heart className="h-7 w-7 fill-white" />
             </button>
@@ -109,8 +108,8 @@ export function Feed({ onBack }: FeedProps) {
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-cineva-50 text-cineva-500">
             <Logo size={48} />
           </div>
-          <h3 className="text-xl font-semibold text-slate-800">You've seen everyone!</h3>
-          <p className="text-center text-sm text-slate-500 max-w-xs">
+          <h3 className="font-serif text-2xl text-stone-800">You've seen everyone!</h3>
+          <p className="text-center text-sm text-stone-500 max-w-xs">
             Check back later for new cinema lovers in your area.
           </p>
           <Button onClick={onBack} variant="outline" className="mt-2">
@@ -142,19 +141,19 @@ export function Feed({ onBack }: FeedProps) {
                 <Logo size={64} className="text-amber-300" />
               </motion.div>
 
-              <h2 className="text-4xl font-bold text-white">It's a Match!</h2>
+              <h2 className="font-serif text-5xl text-white">It's a Match!</h2>
 
               <div className="flex items-center gap-4">
                 <img
                   src={mockData.user.photo}
                   alt={mockData.user.name}
-                  className="h-20 w-20 rounded-full border-[3px] border-white object-cover shadow-lg"
+                  className="h-20 w-20 rounded-full border-[3px] border-white/80 object-cover shadow-lg"
                 />
-                <Heart className="h-8 w-8 text-coral-400 fill-coral-400" />
+                <Heart className="h-8 w-8 text-amber-300 fill-amber-300" />
                 <img
                   src={currentMatch.photo}
                   alt={currentMatch.name}
-                  className="h-20 w-20 rounded-full border-[3px] border-white object-cover shadow-lg"
+                  className="h-20 w-20 rounded-full border-[3px] border-white/80 object-cover shadow-lg"
                 />
               </div>
 

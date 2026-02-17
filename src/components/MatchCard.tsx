@@ -28,20 +28,21 @@ export function MatchCard({ match }: MatchCardProps) {
         transition: { duration: 0.2 },
       }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      className="absolute inset-0 flex flex-col overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-100"
+      className="absolute inset-0 flex flex-col overflow-hidden rounded-3xl bg-white shadow-xl border border-stone-100"
     >
-      {/* Photo */}
+      {/* Photo with warm tint */}
       <div className="relative h-[55%] overflow-hidden">
         <img
           src={match.photo}
           alt={match.name}
           className="h-full w-full object-cover"
+          style={{ filter: 'saturate(0.92) sepia(0.06) brightness(1.02)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/50 via-transparent to-amber-900/5" />
 
         {/* Name overlay */}
         <div className="absolute bottom-4 left-5 right-5">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="font-serif text-3xl text-white">
             {match.name}, {match.age}
           </h2>
           <div className="flex items-center gap-1.5 mt-1">
@@ -53,19 +54,19 @@ export function MatchCard({ match }: MatchCardProps) {
 
       {/* Info */}
       <div className="flex flex-1 flex-col gap-4 p-5 overflow-y-auto">
-        <p className="text-sm text-slate-600 leading-relaxed">{match.bio}</p>
+        <p className="text-sm text-stone-600 leading-relaxed italic">{match.bio}</p>
 
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Clapperboard className="h-4 w-4 text-cineva-500" />
+        <div className="flex items-center gap-2 text-sm text-stone-500">
+          <Clapperboard className="h-4 w-4 text-amber-500" />
           <span className="font-medium">{match.filmsWatched} films</span>
-          <span className="text-slate-300">|</span>
+          <span className="text-stone-300">|</span>
           <span>{match.topCinema}</span>
         </div>
 
         <div className="flex items-center gap-2">
           <Film className="h-4 w-4 text-cineva-500 shrink-0" />
-          <span className="text-sm text-slate-500">Favorite:</span>
-          <span className="text-sm font-medium text-slate-700 truncate">{match.favoriteFilm}</span>
+          <span className="text-sm text-stone-500">Favorite:</span>
+          <span className="text-sm font-medium text-stone-700 truncate">{match.favoriteFilm}</span>
         </div>
 
         <div className="flex flex-wrap gap-1.5">

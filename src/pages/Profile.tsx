@@ -7,7 +7,6 @@ import {
   Clapperboard,
   TrendingUp,
   Heart,
-  ArrowRight,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -29,7 +28,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
       transition={{ duration: 0.4 }}
       className="flex w-full flex-col items-center pb-12 pt-10"
     >
-      {/* Header — clean white */}
+      {/* Header */}
       <div className="mx-auto flex w-full max-w-md flex-col items-center px-6">
         <motion.p
           initial={{ opacity: 0 }}
@@ -48,7 +47,8 @@ export function Profile({ onFindMatches }: ProfileProps) {
           <img
             src={user.photo}
             alt={user.name}
-            className="h-28 w-28 rounded-full border-4 border-cineva-100 object-cover shadow-lg"
+            className="h-28 w-28 rounded-full border-4 border-amber-100 object-cover shadow-lg shadow-stone-200"
+            style={{ filter: 'saturate(0.92) sepia(0.06) brightness(1.02)' }}
           />
         </motion.div>
 
@@ -56,7 +56,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-4 text-2xl font-bold text-slate-900"
+          className="mt-4 font-serif text-3xl text-stone-800"
         >
           {user.name}
         </motion.h1>
@@ -65,7 +65,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-2 flex items-center gap-4 text-sm text-slate-500"
+          className="mt-2 flex items-center gap-4 text-sm text-stone-500"
         >
           <span className="flex items-center gap-1">
             <MapPin className="h-3.5 w-3.5" />
@@ -104,15 +104,15 @@ export function Profile({ onFindMatches }: ProfileProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm mb-4"
+          className="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm mb-4"
         >
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
-            <Heart className="h-4 w-4 text-coral-500" />
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
+            <Heart className="h-4 w-4 text-cineva-500" />
             Favorite Genres
           </h3>
           <div className="flex flex-wrap gap-2">
             {userStats.favoriteGenres.slice(0, 3).map((genre, i) => (
-              <Badge key={genre} variant={i === 0 ? "default" : "secondary"}>
+              <Badge key={genre} variant={i === 0 ? "warm" : "secondary"}>
                 {genre}
               </Badge>
             ))}
@@ -124,20 +124,20 @@ export function Profile({ onFindMatches }: ProfileProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm mb-8"
+          className="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm mb-8"
         >
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
             <MapPin className="h-4 w-4 text-cineva-500" />
             Top Cinemas
           </h3>
           <div className="space-y-2">
             {userStats.topCinemas.map((cinema, i) => (
               <div key={cinema.name} className="flex items-center gap-3 text-sm">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-cineva-50 text-xs font-bold text-cineva-600">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-50 text-xs font-bold text-amber-600">
                   {i + 1}
                 </span>
-                <span className="flex-1 text-slate-600">{cinema.name}</span>
-                <span className="text-xs font-medium text-slate-400">{cinema.visits} visits</span>
+                <span className="flex-1 text-stone-600">{cinema.name}</span>
+                <span className="text-xs font-medium text-stone-400">{cinema.visits} visits</span>
               </div>
             ))}
           </div>
@@ -151,7 +151,6 @@ export function Profile({ onFindMatches }: ProfileProps) {
         >
           <Button onClick={onFindMatches} size="lg" className="w-full">
             Find Matches
-            <ArrowRight className="h-4 w-4" />
           </Button>
         </motion.div>
       </div>
