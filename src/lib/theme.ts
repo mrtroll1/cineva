@@ -1,5 +1,5 @@
 // ✏️ Change this ONE value to re-theme the entire app
-export const BASE_COLOR = '#65469e'
+export const BASE_COLOR = '#3b6eb5'
 
 // Auto-generates a full Tailwind-style shade palette from a single hex
 function hexToRgb(hex: string) {

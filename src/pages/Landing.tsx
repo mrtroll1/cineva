@@ -3,7 +3,6 @@ import { motion } from "framer-motion"
 import { Ticket, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Logo } from "@/components/Logo"
 
 interface LandingProps {
   onConnect: () => void
@@ -45,9 +44,6 @@ export function Landing({ onConnect }: LandingProps) {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="flex flex-col items-center gap-3"
         >
-          <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-gradient-to-br from-cineva-400 to-cineva-700 shadow-lg shadow-cineva-200 text-white">
-            <Logo size={52} />
-          </div>
           <h1 className="text-5xl font-bold tracking-tight text-slate-900">
             cin<span className="text-cineva-600">e</span>vá
           </h1>
@@ -69,7 +65,7 @@ export function Landing({ onConnect }: LandingProps) {
           <div className="relative mb-4">
             <Ticket className="absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
             <Input
-              placeholder="e.g. NL-4829-7156"
+              placeholder="e.g. $93278420387"
               value={passNumber}
               onChange={(e) => setPassNumber(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleConnect()}
@@ -108,7 +104,7 @@ export function Landing({ onConnect }: LandingProps) {
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 1.6, ease: "easeInOut" }}
-                  className="h-full rounded-full bg-gradient-to-r from-cineva-400 to-cineva-700"
+                  className="h-full rounded-full bg-gradient-to-r from-cineva-400 to-cineva-600"
                 />
               </div>
               <p className="text-center text-xs text-slate-400">
