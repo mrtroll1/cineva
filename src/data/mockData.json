@@ -1,0 +1,114 @@
+{
+  "user": {
+    "name": "Emma van der Berg",
+    "photo": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face",
+    "passNumber": "NL-4829-7156",
+    "memberSince": "2021",
+    "city": "Amsterdam",
+    "age": 28
+  },
+  "userStats": {
+    "filmsWatched": 247,
+    "monthlyAverage": 8.2,
+    "favoriteGenres": ["Arthouse", "Drama", "Sci-Fi", "Documentary", "Thriller"],
+    "topCinemas": [
+      { "name": "Eye Filmmuseum", "visits": 86 },
+      { "name": "Kriterion", "visits": 64 },
+      { "name": "De Uitkijk", "visits": 41 }
+    ],
+    "mostWatchedDirector": "Denis Villeneuve",
+    "recentFavorite": "Past Lives"
+  },
+  "matches": [
+    {
+      "id": 1,
+      "name": "Lucas Moreau",
+      "age": 31,
+      "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      "city": "Rotterdam",
+      "compatibility": 94,
+      "sharedGenres": ["Arthouse", "Drama", "Sci-Fi"],
+      "favoriteFilm": "Eternal Sunshine of the Spotless Mind",
+      "bio": "Film programmer by day, cinephile always. Looking for someone to debate Tarkovsky over Indonesian food.",
+      "filmsWatched": 312,
+      "topCinema": "LantarenVenster"
+    },
+    {
+      "id": 2,
+      "name": "Sofia Lindqvist",
+      "age": 26,
+      "photo": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+      "city": "Amsterdam",
+      "compatibility": 91,
+      "sharedGenres": ["Documentary", "Arthouse"],
+      "favoriteFilm": "Aftersun",
+      "bio": "Architecture student who cries at every A24 film. Seeking a fellow tissue-bringer.",
+      "filmsWatched": 189,
+      "topCinema": "Eye Filmmuseum"
+    },
+    {
+      "id": 3,
+      "name": "Daan Bakker",
+      "age": 33,
+      "photo": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
+      "city": "Utrecht",
+      "compatibility": 87,
+      "sharedGenres": ["Sci-Fi", "Thriller", "Drama"],
+      "favoriteFilm": "Blade Runner 2049",
+      "bio": "Sound designer. I judge people by their Letterboxd ratings. Fair warning.",
+      "filmsWatched": 421,
+      "topCinema": "'t Hoogt"
+    },
+    {
+      "id": 4,
+      "name": "Mila Jansen",
+      "age": 29,
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
+      "city": "The Hague",
+      "compatibility": 85,
+      "sharedGenres": ["Drama", "Documentary", "Arthouse"],
+      "favoriteFilm": "Portrait of a Lady on Fire",
+      "bio": "Museum curator & film lover. The kind of person who stays for the credits.",
+      "filmsWatched": 276,
+      "topCinema": "Filmhuis Den Haag"
+    },
+    {
+      "id": 5,
+      "name": "Thomas Witt",
+      "age": 30,
+      "photo": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face",
+      "city": "Groningen",
+      "compatibility": 82,
+      "sharedGenres": ["Arthouse", "Sci-Fi"],
+      "favoriteFilm": "Stalker",
+      "bio": "Philosophy grad. Moved to NL for Cineville, stayed for the rain. Slow cinema enthusiast.",
+      "filmsWatched": 358,
+      "topCinema": "Forum Groningen"
+    },
+    {
+      "id": 6,
+      "name": "Anouk de Vries",
+      "age": 27,
+      "photo": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face",
+      "city": "Amsterdam",
+      "compatibility": 79,
+      "sharedGenres": ["Thriller", "Drama"],
+      "favoriteFilm": "Parasite",
+      "bio": "Journalist. I have opinions about aspect ratios. Last film that changed me: Close.",
+      "filmsWatched": 198,
+      "topCinema": "Kriterion"
+    }
+  ],
+  "cinemas": [
+    "Eye Filmmuseum",
+    "Kriterion",
+    "De Uitkijk",
+    "LantarenVenster",
+    "Filmhuis Den Haag",
+    "Forum Groningen",
+    "'t Hoogt",
+    "Lab111",
+    "FC Hyena",
+    "Kino Rotterdam"
+  ]
+}
