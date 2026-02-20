@@ -2,6 +2,7 @@ import { users } from '../schema/index.js'
 
 const SEED_USERS = [
   {
+    id: 'db111f37-3cd0-42e6-8493-c9530ad6294f',
     name: 'Anouk',
     lastName: 'de Vries',
     photoUrl: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face',
