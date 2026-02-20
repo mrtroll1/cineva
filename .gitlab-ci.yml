@@ -22,23 +22,30 @@ lint:api:
     - cd api && npm install && npx tsc --noEmit
 
 # ── Build ──────────────────────────────────────────────────
-build:images:
+.build:
   stage: build
   image: docker:27
   services: [docker:27-dind]
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker build -f api/Dockerfile --target prod -t $API_IMAGE:$CI_COMMIT_SHA -t $API_IMAGE:latest ./api
-    - docker build -f nginx/Dockerfile -t $NGINX_IMAGE:$CI_COMMIT_SHA -t $NGINX_IMAGE:latest .
-    - docker push $API_IMAGE:$CI_COMMIT_SHA
-    - docker push $API_IMAGE:latest
-    - docker push $NGINX_IMAGE:$CI_COMMIT_SHA
-    - docker push $NGINX_IMAGE:latest
   only: [main]
 
+build:api:
+  extends: .build
+  script:
+    - docker build -f api/Dockerfile --target prod -t $API_IMAGE:$CI_COMMIT_SHA -t $API_IMAGE:latest ./api
+    - docker push $API_IMAGE:$CI_COMMIT_SHA
+    - docker push $API_IMAGE:latest
+
+build:nginx:
+  extends: .build
+  script:
+    - docker build -f nginx/Dockerfile -t $NGINX_IMAGE:$CI_COMMIT_SHA -t $NGINX_IMAGE:latest .
+    - docker push $NGINX_IMAGE:$CI_COMMIT_SHA
+    - docker push $NGINX_IMAGE:latest
+
 # ── Deploy ─────────────────────────────────────────────────
-deploy:production:
+.deploy:
   stage: deploy
   image: alpine:3.20
   before_script:
@@ -47,10 +54,14 @@ deploy:production:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+  only: [main]
+  environment:
+    name: production
+    url: https://cineva.nl
+
+deploy:postgres:
+  extends: .deploy
   script:
-    - scp docker-compose.yml docker-compose.prod.yml $SERVER_USER@$SERVER_HOST:/opt/cineva/
-    - ssh $SERVER_USER@$SERVER_HOST "mkdir -p /opt/cineva/nginx"
-    - scp nginx/nginx.prod.conf $SERVER_USER@$SERVER_HOST:/opt/cineva/nginx/
     - |
       ssh $SERVER_USER@$SERVER_HOST "
         cd /opt/cineva &&
@@ -61,11 +72,38 @@ deploy:production:
       CORS_ORIGIN=https://cineva.nl
       PORT=3000
       ENVEOF
-        docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD $CI_REGISTRY &&
-        docker compose -f docker-compose.yml -f docker-compose.prod.yml pull &&
-        docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
       "
-  only: [main]
-  environment:
-    name: production
-    url: https://cineva.nl
+    - scp docker-compose.yml docker-compose.prod.yml $SERVER_USER@$SERVER_HOST:/opt/cineva/
+    - |
+      ssh $SERVER_USER@$SERVER_HOST "
+        cd /opt/cineva &&
+        docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d postgres
+      "
+
+deploy:api:
+  extends: .deploy
+  needs: [build:api, deploy:postgres]
+  script:
+    - scp docker-compose.yml docker-compose.prod.yml $SERVER_USER@$SERVER_HOST:/opt/cineva/
+    - |
+      ssh $SERVER_USER@$SERVER_HOST "
+        cd /opt/cineva &&
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD $CI_REGISTRY &&
+        docker compose -f docker-compose.yml -f docker-compose.prod.yml pull api &&
+        docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d api
+      "
+
+deploy:nginx:
+  extends: .deploy
+  needs: [build:nginx, deploy:api]
+  script:
+    - ssh $SERVER_USER@$SERVER_HOST "mkdir -p /opt/cineva/nginx"
+    - scp nginx/nginx.prod.conf $SERVER_USER@$SERVER_HOST:/opt/cineva/nginx/
+    - scp docker-compose.yml docker-compose.prod.yml $SERVER_USER@$SERVER_HOST:/opt/cineva/
+    - |
+      ssh $SERVER_USER@$SERVER_HOST "
+        cd /opt/cineva &&
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD $CI_REGISTRY &&
+        docker compose -f docker-compose.yml -f docker-compose.prod.yml pull nginx &&
+        docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d nginx
+      "
