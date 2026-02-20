@@ -1,14 +1,10 @@
 services:
   api:
-    build:
-      context: ./api
-      target: prod
+    image: registry.gitlab.com/mrtroll1/cineva/api:latest
     restart: unless-stopped
 
   nginx:
-    build:
-      context: .
-      dockerfile: nginx/Dockerfile
+    image: registry.gitlab.com/mrtroll1/cineva/nginx:latest
     ports:
       - "80:80"
       - "443:443"
