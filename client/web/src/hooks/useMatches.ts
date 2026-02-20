@@ -3,16 +3,15 @@ import { fetchMatches, type Match } from '@/lib/api'
 
 export function useMatches(userId: string) {
   const [data, setData] = useState<Match[] | null>(null)
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    setLoading(true)
+    let cancelled = false
     fetchMatches(userId)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false))
+      .then((result) => { if (!cancelled) setData(result) })
+      .catch((err) => { if (!cancelled) setError(err) })
+    return () => { cancelled = true }
   }, [userId])
 
-  return { data, loading, error }
+  return { data, loading: data === null && error === null, error }
 }
