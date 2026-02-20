@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge"
 
 interface MatchCardProps {
   match: {
-    id: number
+    id: string
     name: string
-    age: number
-    photo: string
+    photo: string | null
     city: string
+    compatibility: number
     sharedGenres: string[]
     favoriteFilm: string
     bio: string
@@ -33,7 +33,7 @@ export function MatchCard({ match }: MatchCardProps) {
       {/* Photo with warm tint */}
       <div className="relative h-[55%] overflow-hidden">
         <img
-          src={match.photo}
+          src={match.photo ?? ''}
           alt={match.name}
           className="h-full w-full object-cover"
           style={{ filter: 'saturate(0.92) sepia(0.06) brightness(1.02)' }}
@@ -43,7 +43,7 @@ export function MatchCard({ match }: MatchCardProps) {
         {/* Name overlay */}
         <div className="absolute bottom-4 left-5 right-5">
           <h2 className="font-serif text-3xl text-white">
-            {match.name}, {match.age}
+            {match.name}
           </h2>
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin className="h-3.5 w-3.5 text-white/80" />

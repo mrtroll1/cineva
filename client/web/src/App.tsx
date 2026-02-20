@@ -8,18 +8,24 @@ type View = "landing" | "profile" | "feed"
 
 function App() {
   const [view, setView] = useState<View>("landing")
+  const [userId, setUserId] = useState<string | null>(null)
+
+  const handleConnect = (connectedUserId: string) => {
+    setUserId(connectedUserId)
+    setView("profile")
+  }
 
   return (
     <div className="w-full max-w-lg mx-auto">
       <AnimatePresence mode="wait">
         {view === "landing" && (
-          <Landing key="landing" onConnect={() => setView("profile")} />
+          <Landing key="landing" onConnect={handleConnect} />
         )}
-        {view === "profile" && (
-          <Profile key="profile" onFindMatches={() => setView("feed")} />
+        {view === "profile" && userId && (
+          <Profile key="profile" userId={userId} onFindMatches={() => setView("feed")} />
         )}
-        {view === "feed" && (
-          <Feed key="feed" onBack={() => setView("profile")} />
+        {view === "feed" && userId && (
+          <Feed key="feed" userId={userId} onBack={() => setView("profile")} />
         )}
       </AnimatePresence>
     </div>

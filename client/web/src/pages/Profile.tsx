@@ -1,24 +1,35 @@
 import { motion } from "framer-motion"
 import {
   Film,
-  Calendar,
   MapPin,
   Trophy,
   Clapperboard,
   TrendingUp,
   Heart,
+  Loader2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { StatBadge } from "@/components/StatBadge"
-import mockData from "@/data/mockData.json"
+import { useProfile } from "@/hooks/useProfile"
 
 interface ProfileProps {
+  userId: string
   onFindMatches: () => void
 }
 
-export function Profile({ onFindMatches }: ProfileProps) {
-  const { user, userStats } = mockData
+export function Profile({ userId, onFindMatches }: ProfileProps) {
+  const { data, loading } = useProfile(userId)
+
+  if (loading || !data) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-cineva-500" />
+      </div>
+    )
+  }
+
+  const { user, stats } = data
 
   return (
     <motion.div
@@ -45,7 +56,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
           transition={{ delay: 0.2, type: "spring" }}
         >
           <img
-            src={user.photo}
+            src={user.photo ?? ''}
             alt={user.name}
             className="h-28 w-28 rounded-full border-4 border-amber-100 object-cover shadow-lg shadow-stone-200"
             style={{ filter: 'saturate(0.92) sepia(0.06) brightness(1.02)' }}
@@ -69,11 +80,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
         >
           <span className="flex items-center gap-1">
             <MapPin className="h-3.5 w-3.5" />
-            {user.city}
-          </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5" />
-            Since {user.memberSince}
+            Amsterdam
           </span>
         </motion.div>
 
@@ -84,7 +91,9 @@ export function Profile({ onFindMatches }: ProfileProps) {
           className="mt-3"
         >
           <Badge variant="secondary">
-            Pass: {user.passNumber}
+            {Object.keys(user.linkedProviders ?? {}).length > 0
+              ? `Cineville connected`
+              : 'No provider linked'}
           </Badge>
         </motion.div>
       </div>
@@ -93,10 +102,10 @@ export function Profile({ onFindMatches }: ProfileProps) {
       <div className="mx-auto mt-8 w-full max-w-md px-6">
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <StatBadge icon={Film} label="Films Watched" value={userStats.filmsWatched} delay={0.3} />
-          <StatBadge icon={TrendingUp} label="Monthly Avg" value={userStats.monthlyAverage} delay={0.4} />
-          <StatBadge icon={Trophy} label="Top Director" value={userStats.mostWatchedDirector} delay={0.5} />
-          <StatBadge icon={Clapperboard} label="Recent Fave" value={userStats.recentFavorite} delay={0.6} />
+          <StatBadge icon={Film} label="Films Watched" value={stats.filmsWatched} delay={0.3} />
+          <StatBadge icon={TrendingUp} label="Monthly Avg" value={stats.monthlyAverage} delay={0.4} />
+          <StatBadge icon={Trophy} label="Top Director" value={stats.mostWatchedDirector} delay={0.5} />
+          <StatBadge icon={Clapperboard} label="Recent Fave" value={stats.recentFavorite} delay={0.6} />
         </div>
 
         {/* Favorite genres */}
@@ -111,7 +120,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
             Favorite Genres
           </h3>
           <div className="flex flex-wrap gap-2">
-            {userStats.favoriteGenres.slice(0, 3).map((genre, i) => (
+            {stats.favoriteGenres.slice(0, 3).map((genre: string, i: number) => (
               <Badge key={genre} variant={i === 0 ? "warm" : "secondary"}>
                 {genre}
               </Badge>
@@ -131,7 +140,7 @@ export function Profile({ onFindMatches }: ProfileProps) {
             Top Cinemas
           </h3>
           <div className="space-y-2">
-            {userStats.topCinemas.map((cinema, i) => (
+            {stats.topCinemas.map((cinema: { name: string; visits: number }, i: number) => (
               <div key={cinema.name} className="flex items-center gap-3 text-sm">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-50 text-xs font-bold text-amber-600">
                   {i + 1}

@@ -1,22 +1,33 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, X, Heart } from "lucide-react"
+import { ArrowLeft, X, Heart, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/Logo"
 import { MatchCard } from "@/components/MatchCard"
-import mockData from "@/data/mockData.json"
+import { useMatches } from "@/hooks/useMatches"
+import { useProfile } from "@/hooks/useProfile"
 
 interface FeedProps {
+  userId: string
   onBack: () => void
 }
 
-export function Feed({ onBack }: FeedProps) {
+export function Feed({ userId, onBack }: FeedProps) {
+  const { data: matches, loading: matchesLoading } = useMatches(userId)
+  const { data: profileData } = useProfile(userId)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showMatch, setShowMatch] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
 
-  const matches = mockData.matches
+  if (matchesLoading || !matches) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-cineva-500" />
+      </div>
+    )
+  }
+
   const currentMatch = currentIndex < matches.length ? matches[currentIndex] : null
 
   const advance = () => {
@@ -145,13 +156,13 @@ export function Feed({ onBack }: FeedProps) {
 
               <div className="flex items-center gap-4">
                 <img
-                  src={mockData.user.photo}
-                  alt={mockData.user.name}
+                  src={profileData?.user.photo ?? ''}
+                  alt={profileData?.user.name ?? 'You'}
                   className="h-20 w-20 rounded-full border-[3px] border-white/80 object-cover shadow-lg"
                 />
                 <Heart className="h-8 w-8 text-amber-300 fill-amber-300" />
                 <img
-                  src={currentMatch.photo}
+                  src={currentMatch.photo ?? ''}
                   alt={currentMatch.name}
                   className="h-20 w-20 rounded-full border-[3px] border-white/80 object-cover shadow-lg"
                 />

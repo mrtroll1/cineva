@@ -3,21 +3,30 @@ import { motion } from "framer-motion"
 import { Ticket, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ingestCineville } from "@/lib/api"
+import { CURRENT_USER_ID } from "@/lib/constants"
 
 interface LandingProps {
-  onConnect: () => void
+  onConnect: (userId: string) => void
 }
 
 export function Landing({ onConnect }: LandingProps) {
   const [passNumber, setPassNumber] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleConnect = () => {
+  const handleConnect = async () => {
     if (!passNumber.trim()) return
     setIsLoading(true)
+
+    try {
+      await ingestCineville(CURRENT_USER_ID, passNumber.trim())
+    } catch {
+      // Ingest failure is non-blocking for the prototype
+    }
+
     setTimeout(() => {
       setIsLoading(false)
-      onConnect()
+      onConnect(CURRENT_USER_ID)
     }, 1800)
   }
 
