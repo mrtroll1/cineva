@@ -35,7 +35,7 @@ export function Profile() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: -30 }}
       transition={{ duration: 0.4 }}
-      className="flex w-full flex-col items-center pb-12 pt-10"
+      className="flex w-full flex-col items-center pb-8 pt-6"
     >
       {/* Header */}
       <div className="mx-auto flex w-full max-w-md flex-col items-center px-6">
@@ -43,7 +43,7 @@ export function Profile() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-4 text-sm font-medium text-cineva-600"
+          className="mb-2 text-sm font-medium text-cineva-600"
         >
           Your Cinevá Profile
         </motion.p>
@@ -56,7 +56,7 @@ export function Profile() {
           <img
             src={user.photo ?? ''}
             alt={user.name}
-            className="h-28 w-28 rounded-full border-4 border-amber-100 object-cover shadow-lg shadow-stone-200"
+            className="h-24 w-24 rounded-full border-4 border-amber-100 object-cover shadow-lg shadow-stone-200"
             style={{ filter: 'saturate(0.92) sepia(0.06) brightness(1.02)' }}
           />
         </motion.div>
@@ -65,7 +65,7 @@ export function Profile() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-4 font-serif text-3xl text-stone-800"
+          className="mt-3 font-serif text-2xl text-stone-800"
         >
           {user.name}
         </motion.h1>
@@ -97,9 +97,9 @@ export function Profile() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto mt-8 w-full max-w-md px-6">
+      <div className="mx-auto mt-5 w-full max-w-md px-6">
         {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="grid grid-cols-2 gap-2 mb-4">
           <StatBadge icon={Film} label="Films Watched" value={stats.filmsWatched} delay={0.3} />
           <StatBadge icon={TrendingUp} label="Monthly Avg" value={stats.monthlyAverage} delay={0.4} />
           <StatBadge icon={Trophy} label="Top Director" value={stats.mostWatchedDirector} delay={0.5} />
@@ -111,7 +111,7 @@ export function Profile() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm mb-4"
+          className="rounded-2xl border border-stone-100 bg-white p-4 shadow-sm mb-3"
         >
           <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
             <Heart className="h-4 w-4 text-cineva-500" />
@@ -131,7 +131,7 @@ export function Profile() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm mb-8"
+          className="rounded-2xl border border-stone-100 bg-white p-4 shadow-sm mb-5"
         >
           <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
             <MapPin className="h-4 w-4 text-cineva-500" />

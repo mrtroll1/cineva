@@ -65,7 +65,7 @@ export function Feed() {
       className="flex min-h-screen w-full flex-col items-center"
     >
       {/* Top bar */}
-      <div className="flex w-full max-w-md items-center justify-between px-6 py-4">
+      <div className="flex w-full max-w-md items-center justify-between px-6 py-3">
         <Button variant="ghost" size="sm" onClick={() => navigate("/profile")} className="gap-1.5">
           <ArrowLeft className="h-4 w-4" />
           Profile
@@ -75,9 +75,9 @@ export function Feed() {
       </div>
 
       {currentMatch ? (
-        <div className="mx-auto w-full max-w-md flex-1 px-6 pb-6 flex flex-col">
+        <div className="mx-auto w-full max-w-md flex-1 px-6 pb-4 flex flex-col">
           {/* Card area */}
-          <div className="relative flex-1 min-h-0 max-h-[600px]">
+          <div className="relative flex-1 min-h-0 max-h-[520px]">
             {currentIndex + 1 < matches.length && (
               <div className="pointer-events-none absolute inset-0 top-2 rounded-3xl bg-stone-200/60 scale-[0.96]" />
             )}
@@ -88,23 +88,23 @@ export function Feed() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center justify-center gap-6 py-5">
+          <div className="flex items-center justify-center gap-5 py-3">
             <button
               type="button"
               onClick={handleSkip}
               disabled={isAnimating}
-              className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-stone-200 bg-white transition-all hover:border-stone-300 hover:bg-stone-50 active:scale-95 disabled:opacity-40 cursor-pointer"
+              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-stone-200 bg-white transition-all hover:border-stone-300 hover:bg-stone-50 active:scale-95 disabled:opacity-40 cursor-pointer"
             >
-              <X className="h-6 w-6 text-stone-400" />
+              <X className="h-5 w-5 text-stone-400" />
             </button>
 
             <button
               type="button"
               onClick={handleLike}
               disabled={isAnimating}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-cineva-400 to-cineva-600 text-white shadow-lg shadow-cineva-200 transition-all hover:shadow-xl active:scale-95 disabled:opacity-40 cursor-pointer"
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-cineva-400 to-cineva-600 text-white shadow-lg shadow-cineva-200 transition-all hover:shadow-xl active:scale-95 disabled:opacity-40 cursor-pointer"
             >
-              <Heart className="h-7 w-7 fill-white" />
+              <Heart className="h-6 w-6 fill-white" />
             </button>
           </div>
         </div>

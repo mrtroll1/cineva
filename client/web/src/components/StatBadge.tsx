@@ -14,10 +14,10 @@ export function StatBadge({ icon: Icon, label, value, delay = 0 }: StatBadgeProp
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay }}
-      className="flex items-center gap-3 rounded-xl bg-white border border-stone-100 px-4 py-3"
+      className="flex items-center gap-2.5 rounded-xl bg-white border border-stone-100 px-3 py-2.5"
     >
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100">
-        <Icon className="h-4 w-4 text-amber-600" />
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-100">
+        <Icon className="h-3.5 w-3.5 text-amber-600" />
       </div>
       <div className="min-w-0">
         <p className="text-sm font-bold text-stone-800 truncate">{value}</p>

@@ -53,7 +53,7 @@ export function MatchCard({ match }: MatchCardProps) {
       </div>
 
       {/* Info */}
-      <div className="flex flex-1 flex-col gap-4 p-5 overflow-y-auto">
+      <div className="flex flex-1 flex-col gap-3 p-4 overflow-y-auto">
         <p className="text-sm text-stone-600 leading-relaxed italic">{match.bio}</p>
 
         <div className="flex items-center gap-2 text-sm text-stone-500">
