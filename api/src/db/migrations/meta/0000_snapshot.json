@@ -1,5 +1,5 @@
 {
-  "id": "afde4100-b78d-4d04-8386-64da0915d30a",
+  "id": "13d680d1-14f3-4419-86dd-f72887340bc3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -75,8 +75,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "venture_id": {
-          "name": "venture_id",
+        "venue_id": {
+          "name": "venue_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -129,12 +129,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_visits_venture_id_ventures_id_fk": {
-          "name": "user_visits_venture_id_ventures_id_fk",
+        "user_visits_venue_id_venues_id_fk": {
+          "name": "user_visits_venue_id_venues_id_fk",
           "tableFrom": "user_visits",
-          "tableTo": "ventures",
+          "tableTo": "venues",
           "columnsFrom": [
-            "venture_id"
+            "venue_id"
           ],
           "columnsTo": [
             "id"
@@ -228,8 +228,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.ventures": {
-      "name": "ventures",
+    "public.venues": {
+      "name": "venues",
       "schema": "",
       "columns": {
         "id": {
@@ -259,7 +259,7 @@
         },
         "type": {
           "name": "type",
-          "type": "venture_type",
+          "type": "venue_type",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -295,8 +295,8 @@
     }
   },
   "enums": {
-    "public.venture_type": {
-      "name": "venture_type",
+    "public.venue_type": {
+      "name": "venue_type",
       "schema": "public",
       "values": [
         "CINEMA",

@@ -16,7 +16,7 @@ export async function getProfile(userId: string) {
   let museumStats = null
 
   if (hasCineville) {
-    const stats = await visitRepository.getStatsByUserIdAndVentureType(userId, 'CINEMA')
+    const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'CINEMA')
     cinemaStats = {
       visitsCount: stats.visitsCount,
       monthlyAverage: stats.monthlyAverage,
@@ -28,7 +28,7 @@ export async function getProfile(userId: string) {
   }
 
   if (hasMuseumkaart) {
-    const stats = await visitRepository.getStatsByUserIdAndVentureType(userId, 'MUSEUM')
+    const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'MUSEUM')
     museumStats = {
       visitsCount: stats.visitsCount,
       monthlyAverage: stats.monthlyAverage,

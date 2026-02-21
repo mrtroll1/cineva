@@ -1,6 +1,6 @@
 import { db } from '../client.js'
 import { seedProviders } from './01_providers.js'
-import { seedVentures } from './02_ventures.js'
+import { seedVenues } from './02_venues.js'
 import { seedUsers } from './03_users.js'
 import { seedVisits } from './04_visits.js'
 import postgres from 'postgres'
@@ -9,9 +9,9 @@ async function run() {
   console.log('Seeding database...\n')
 
   const providerIds = await seedProviders(db)
-  const ventureIds = await seedVentures(db)
+  const venueIds = await seedVenues(db)
   const userIds = await seedUsers(db, providerIds)
-  await seedVisits(db, userIds, ventureIds)
+  await seedVisits(db, userIds, venueIds)
 
   console.log('\nSeeding complete!')
 

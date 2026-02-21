@@ -1,6 +1,6 @@
 import { fetchCinevilleHistory } from '../providers/cineville.js'
 import { fetchMuseumkaartHistory } from '../providers/museumkaart.js'
-import { ventureRepository } from '../repositories/ventureRepository.js'
+import { venueRepository } from '../repositories/venueRepository.js'
 import { visitRepository } from '../repositories/visitRepository.js'
 import { userRepository } from '../repositories/userRepository.js'
 
@@ -10,17 +10,17 @@ export async function ingestCinevilleVisits(userId: string, passNumber: string) 
 
   const history = await fetchCinevilleHistory(passNumber)
 
-  // Resolve cinema names to venture IDs
-  const allVentures = await ventureRepository.findAll()
-  const ventureMap = new Map(allVentures.map((v) => [v.name, v.id]))
+  // Resolve cinema names to venue IDs
+  const allVenues = await venueRepository.findAll()
+  const venueMap = new Map(allVenues.map((v) => [v.name, v.id]))
 
   const visits = history
     .map((record) => {
-      const ventureId = ventureMap.get(record.cinemaName)
-      if (!ventureId) return null
+      const venueId = venueMap.get(record.cinemaName)
+      if (!venueId) return null
       return {
         userId,
-        ventureId,
+        venueId,
         date: record.date,
         providerName: 'cineville',
       }
@@ -42,16 +42,16 @@ export async function ingestMuseumkaartVisits(userId: string, cardNumber: string
 
   const history = await fetchMuseumkaartHistory(cardNumber)
 
-  const allVentures = await ventureRepository.findAll()
-  const ventureMap = new Map(allVentures.map((v) => [v.name, v.id]))
+  const allVenues = await venueRepository.findAll()
+  const venueMap = new Map(allVenues.map((v) => [v.name, v.id]))
 
   const visits = history
     .map((record) => {
-      const ventureId = ventureMap.get(record.museumName)
-      if (!ventureId) return null
+      const venueId = venueMap.get(record.museumName)
+      if (!venueId) return null
       return {
         userId,
-        ventureId,
+        venueId,
         date: record.date,
         providerName: 'museumkaart',
       }

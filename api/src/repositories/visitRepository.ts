@@ -1,6 +1,6 @@
 import { eq, and, sql, desc } from 'drizzle-orm'
 import { db } from '../db/client.js'
-import { userVisits, ventures } from '../db/schema/index.js'
+import { userVisits, venues } from '../db/schema/index.js'
 
 export const visitRepository = {
   async findByUserId(userId: string) {
@@ -13,7 +13,7 @@ export const visitRepository = {
 
   async createMany(visits: Array<{
     userId: string
-    ventureId: string
+    venueId: string
     date: string
     providerName: string
   }>) {
@@ -47,13 +47,13 @@ export const visitRepository = {
     // Top cinemas
     const topCinemas = await db
       .select({
-        name: ventures.name,
+        name: venues.name,
         visits: sql<number>`count(*)::int`,
       })
       .from(userVisits)
-      .innerJoin(ventures, eq(userVisits.ventureId, ventures.id))
+      .innerJoin(venues, eq(userVisits.venueId, venues.id))
       .where(eq(userVisits.userId, userId))
-      .groupBy(ventures.name)
+      .groupBy(venues.name)
       .orderBy(desc(sql`count(*)`))
       .limit(3)
 
@@ -64,17 +64,17 @@ export const visitRepository = {
     }
   },
 
-  async getStatsByUserIdAndVentureType(userId: string, ventureType: 'CINEMA' | 'MUSEUM') {
+  async getStatsByUserIdAndVenueType(userId: string, venueType: 'CINEMA' | 'MUSEUM') {
     const condition = and(
       eq(userVisits.userId, userId),
-      eq(ventures.type, ventureType),
+      eq(venues.type, venueType),
     )
 
-    // Total visits for this venture type
+    // Total visits for this venue type
     const [totalResult] = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(userVisits)
-      .innerJoin(ventures, eq(userVisits.ventureId, ventures.id))
+      .innerJoin(venues, eq(userVisits.venueId, venues.id))
       .where(condition)
 
     // Monthly average
@@ -91,19 +91,19 @@ export const visitRepository = {
         `,
       })
       .from(userVisits)
-      .innerJoin(ventures, eq(userVisits.ventureId, ventures.id))
+      .innerJoin(venues, eq(userVisits.venueId, venues.id))
       .where(condition)
 
     // Top venues
     const topVenues = await db
       .select({
-        name: ventures.name,
+        name: venues.name,
         visits: sql<number>`count(*)::int`,
       })
       .from(userVisits)
-      .innerJoin(ventures, eq(userVisits.ventureId, ventures.id))
+      .innerJoin(venues, eq(userVisits.venueId, venues.id))
       .where(condition)
-      .groupBy(ventures.name)
+      .groupBy(venues.name)
       .orderBy(desc(sql`count(*)`))
       .limit(3)
 

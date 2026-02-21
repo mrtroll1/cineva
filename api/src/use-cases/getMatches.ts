@@ -31,7 +31,7 @@ export async function getMatches(userId: string, limit = 10) {
       const providers = (u.linkedProviders ?? {}) as Record<string, string>
       const hasMuseumkaart = 'museumkaart' in providers
 
-      const cinemaStats = await visitRepository.getStatsByUserIdAndVentureType(u.id, 'CINEMA')
+      const cinemaStats = await visitRepository.getStatsByUserIdAndVenueType(u.id, 'CINEMA')
 
       let museumsVisited = 0
       let topMuseum: string | null = null
@@ -39,7 +39,7 @@ export async function getMatches(userId: string, limit = 10) {
       let topMuseums: Array<{ name: string; visits: number }> = []
 
       if (hasMuseumkaart) {
-        const museumStats = await visitRepository.getStatsByUserIdAndVentureType(u.id, 'MUSEUM')
+        const museumStats = await visitRepository.getStatsByUserIdAndVenueType(u.id, 'MUSEUM')
         museumsVisited = museumStats.visitsCount
         topMuseum = museumStats.topVenues[0]?.name ?? null
         museumMonthlyAverage = museumStats.monthlyAverage

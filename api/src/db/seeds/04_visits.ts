@@ -57,7 +57,7 @@ function generateRandomVisits(
 export async function seedVisits(
   db: any,
   userIds: Record<string, string>,
-  ventureIds: Record<string, string>,
+  venueIds: Record<string, string>,
 ): Promise<void> {
   console.log('Seeding visits...')
 
@@ -75,11 +75,11 @@ export async function seedVisits(
     const rows = visits
       .map((v) => ({
         userId,
-        ventureId: ventureIds[v.cinema],
+        venueId: venueIds[v.cinema],
         date: v.date,
         providerName: 'cineville',
       }))
-      .filter((r) => r.ventureId)
+      .filter((r) => r.venueId)
 
     // Insert in batches of 500
     for (let i = 0; i < rows.length; i += 500) {
@@ -104,11 +104,11 @@ export async function seedVisits(
     const rows = visits
       .map((v) => ({
         userId,
-        ventureId: ventureIds[v.cinema],
+        venueId: venueIds[v.cinema],
         date: v.date,
         providerName: 'museumkaart',
       }))
-      .filter((r) => r.ventureId)
+      .filter((r) => r.venueId)
 
     for (let i = 0; i < rows.length; i += 500) {
       const batch = rows.slice(i, i + 500)

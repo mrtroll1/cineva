@@ -1,4 +1,4 @@
-import { ventures } from '../schema/index.js'
+import { venues } from '../schema/index.js'
 
 const CINEMAS = [
   { name: 'Eye Filmmuseum', city: 'Amsterdam', country: 'NL', type: 'CINEMA' as const },
@@ -24,20 +24,20 @@ const MUSEUMS = [
   { name: 'Centraal Museum', city: 'Utrecht', country: 'NL', type: 'MUSEUM' as const },
 ]
 
-export async function seedVentures(db: any): Promise<Record<string, string>> {
-  console.log('Seeding ventures...')
+export async function seedVenues(db: any): Promise<Record<string, string>> {
+  console.log('Seeding venues...')
 
   const rows = await db
-    .insert(ventures)
+    .insert(venues)
     .values([...CINEMAS, ...MUSEUMS])
     .onConflictDoNothing()
-    .returning({ id: ventures.id, name: ventures.name })
+    .returning({ id: venues.id, name: venues.name })
 
   const ids: Record<string, string> = {}
   for (const row of rows) {
     ids[row.name] = row.id
   }
 
-  console.log(`  Inserted ${rows.length} ventures`)
+  console.log(`  Inserted ${rows.length} venues`)
   return ids
 }

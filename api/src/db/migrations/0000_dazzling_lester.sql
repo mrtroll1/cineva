@@ -1,4 +1,4 @@
-CREATE TYPE "public"."venture_type" AS ENUM('CINEMA', 'MUSEUM');--> statement-breakpoint
+CREATE TYPE "public"."venue_type" AS ENUM('CINEMA', 'MUSEUM');--> statement-breakpoint
 CREATE TABLE "providers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE "providers" (
 CREATE TABLE "user_visits" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
-	"venture_id" uuid NOT NULL,
+	"venue_id" uuid NOT NULL,
 	"date" date NOT NULL,
 	"provider_name" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -32,16 +32,16 @@ CREATE TABLE "users" (
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
-CREATE TABLE "ventures" (
+CREATE TABLE "venues" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"country" text NOT NULL,
 	"city" text NOT NULL,
-	"type" "venture_type" NOT NULL,
+	"type" "venue_type" NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
 ALTER TABLE "user_visits" ADD CONSTRAINT "user_visits_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "user_visits" ADD CONSTRAINT "user_visits_venture_id_ventures_id_fk" FOREIGN KEY ("venture_id") REFERENCES "public"."ventures"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "user_visits" ADD CONSTRAINT "user_visits_venue_id_venues_id_fk" FOREIGN KEY ("venue_id") REFERENCES "public"."venues"("id") ON DELETE no action ON UPDATE no action;
