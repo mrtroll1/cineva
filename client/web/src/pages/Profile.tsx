@@ -14,12 +14,17 @@ import {
   Ticket,
   X,
   Link as LinkIcon,
+  Send,
+  Clock,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { StatBadge } from "@/components/StatBadge"
 import { useProfile } from "@/hooks/useProfile"
+import { useInvites } from "@/hooks/useInvites"
 import { ingestCineville, ingestMuseumkaart } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
@@ -28,18 +33,13 @@ type ProviderTab = "cineville" | "museumkaart"
 export function Profile() {
   const navigate = useNavigate()
   const { data, loading, refetch } = useProfile(CURRENT_USER_ID)
+  const { data: invites } = useInvites(CURRENT_USER_ID)
   const [activeTab, setActiveTab] = useState<ProviderTab | null>(null)
   const [linkModal, setLinkModal] = useState<ProviderTab | null>(null)
   const [linkInput, setLinkInput] = useState("")
   const [linking, setLinking] = useState(false)
 
-  if (loading || !data) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-cineva-500" />
-      </div>
-    )
-  }
+  if (loading || !data) return null
 
   const { user, cinemaStats, museumStats } = data
   const hasCineville = 'cineville' in (user.linkedProviders ?? {})
@@ -299,6 +299,65 @@ export function Profile() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Invites */}
+        {invites && invites.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="mb-5"
+          >
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
+              <Send className="h-4 w-4 text-cineva-500" />
+              Invites
+            </h3>
+            <div className="space-y-2">
+              {invites.map((invite) => (
+                <div
+                  key={invite.id}
+                  className="rounded-2xl border border-stone-100 bg-white p-3.5 shadow-sm flex items-start gap-3"
+                >
+                  <img
+                    src={invite.otherUser.photo ?? ''}
+                    alt={invite.otherUser.name}
+                    className="h-10 w-10 rounded-full object-cover flex-shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-sm font-medium text-stone-800 truncate">
+                        {invite.direction === 'sent' ? `You → ${invite.otherUser.name}` : `${invite.otherUser.name} → You`}
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-500">
+                      {invite.whereText} · {invite.whenText}
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0">
+                    {invite.status === 'PENDING' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        <Clock className="h-3 w-3" />
+                        Pending
+                      </span>
+                    )}
+                    {invite.status === 'ACCEPTED' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                        <CheckCircle2 className="h-3 w-3" />
+                        Accepted
+                      </span>
+                    )}
+                    {invite.status === 'DECLINED' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-500">
+                        <XCircle className="h-3 w-3" />
+                        Declined
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* CTA */}
         <motion.div

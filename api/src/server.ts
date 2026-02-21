@@ -4,6 +4,7 @@ import { healthRoutes } from './routes/health.js'
 import { profileRoutes } from './routes/profile.js'
 import { matchRoutes } from './routes/matches.js'
 import { ingestRoutes } from './routes/ingest.js'
+import { inviteRoutes } from './routes/invites.js'
 
 export function buildServer() {
   const app = Fastify({ logger: true })
@@ -13,6 +14,7 @@ export function buildServer() {
   app.register(profileRoutes, { prefix: '/api' })
   app.register(matchRoutes, { prefix: '/api' })
   app.register(ingestRoutes, { prefix: '/api' })
+  app.register(inviteRoutes, { prefix: '/api' })
 
   return app
 }

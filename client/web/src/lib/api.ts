@@ -51,6 +51,20 @@ export interface Match {
   topMuseums: Array<{ name: string; visits: number }>
 }
 
+export interface Invite {
+  id: string
+  whenText: string
+  whereText: string
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED'
+  createdAt: string
+  direction: 'sent' | 'received'
+  otherUser: {
+    id: string
+    name: string
+    photo: string | null
+  }
+}
+
 const profileCache = new Map<string, Promise<ProfileResponse>>()
 
 export function prefetchProfile(userId: string): void {
@@ -77,6 +91,12 @@ export async function fetchProfile(userId: string): Promise<ProfileResponse> {
 export async function fetchMatches(userId: string, limit = 10): Promise<Match[]> {
   const res = await fetch(`${BASE}/matches?userId=${encodeURIComponent(userId)}&limit=${limit}`)
   if (!res.ok) throw new Error('Failed to fetch matches')
+  return res.json()
+}
+
+export async function fetchInvites(userId: string): Promise<Invite[]> {
+  const res = await fetch(`${BASE}/invites?userId=${encodeURIComponent(userId)}`)
+  if (!res.ok) throw new Error('Failed to fetch invites')
   return res.json()
 }
 

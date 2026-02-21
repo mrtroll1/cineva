@@ -3,6 +3,7 @@ import { seedProviders } from './01_providers.js'
 import { seedVenues } from './02_venues.js'
 import { seedUsers } from './03_users.js'
 import { seedVisits } from './04_visits.js'
+import { seedInvites } from './05_invites.js'
 import postgres from 'postgres'
 
 async function run() {
@@ -12,6 +13,7 @@ async function run() {
   const venueIds = await seedVenues(db)
   const userIds = await seedUsers(db, providerIds)
   await seedVisits(db, userIds, venueIds)
+  await seedInvites(db, userIds)
 
   console.log('\nSeeding complete!')
 
