@@ -167,7 +167,7 @@ export function Feed() {
               </div>
 
               <p className="text-center text-lg text-cineva-100">
-                You and {currentMatch.name} share a love for film
+                You and {currentMatch.name} share a love for culture
               </p>
             </motion.div>
           </motion.div>

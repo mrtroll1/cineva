@@ -1,23 +1,33 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { motion } from "framer-motion"
-import { Ticket, ArrowRight } from "lucide-react"
+import { Ticket, Landmark, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ingestCineville } from "@/lib/api"
+import { ingestCineville, ingestMuseumkaart } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 export function Landing() {
   const navigate = useNavigate()
   const [passNumber, setPassNumber] = useState("")
+  const [cardNumber, setCardNumber] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+  const hasInput = passNumber.trim() || cardNumber.trim()
+
   const handleConnect = async () => {
-    if (!passNumber.trim()) return
+    if (!hasInput) return
     setIsLoading(true)
 
     try {
-      await ingestCineville(CURRENT_USER_ID, passNumber.trim())
+      const promises: Promise<unknown>[] = []
+      if (passNumber.trim()) {
+        promises.push(ingestCineville(CURRENT_USER_ID, passNumber.trim()))
+      }
+      if (cardNumber.trim()) {
+        promises.push(ingestMuseumkaart(CURRENT_USER_ID, cardNumber.trim()))
+      }
+      await Promise.allSettled(promises)
     } catch {
       // Ingest failure is non-blocking for the prototype
     }
@@ -79,9 +89,23 @@ export function Landing() {
             />
           </div>
 
+          <label className="mb-2 block text-sm font-medium text-stone-700">
+            Your Museumkaart number
+          </label>
+          <div className="relative mb-4">
+            <Landmark className="absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-stone-400" />
+            <Input
+              placeholder="e.g. 3920184756"
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleConnect()}
+              className="pl-11"
+            />
+          </div>
+
           <Button
             onClick={handleConnect}
-            disabled={!passNumber.trim() || isLoading}
+            disabled={!hasInput || isLoading}
             className="w-full"
             size="lg"
           >
@@ -104,7 +128,7 @@ export function Landing() {
                 />
               </div>
               <p className="text-center text-xs text-stone-400">
-                Fetching your film history from Cineville...
+                Fetching your cultural history...
               </p>
             </motion.div>
           )}

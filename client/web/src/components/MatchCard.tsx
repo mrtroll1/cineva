@@ -13,7 +13,9 @@ interface MatchCardProps {
     favoriteFilm: string
     bio: string
     filmsWatched: number
+    museumsVisited: number
     topCinema: string
+    topMuseum: string | null
   }
 }
 
@@ -58,9 +60,21 @@ export function MatchCard({ match }: MatchCardProps) {
 
         <div className="flex items-center gap-2 text-sm text-stone-500">
           <Clapperboard className="h-4 w-4 text-amber-500" />
-          <span className="font-medium">{match.filmsWatched} films</span>
-          <span className="text-stone-300">|</span>
+          <span className="font-medium">
+            {match.filmsWatched} films
+            {match.museumsVisited > 0 && ` · ${match.museumsVisited} exhibitions`}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-stone-500">
+          <MapPin className="h-4 w-4 text-stone-400" />
           <span>{match.topCinema}</span>
+          {match.topMuseum && (
+            <>
+              <span className="text-stone-300">·</span>
+              <span>{match.topMuseum}</span>
+            </>
+          )}
         </div>
 
         <div className="flex items-center gap-2">

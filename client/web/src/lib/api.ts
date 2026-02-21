@@ -8,18 +8,28 @@ export interface UserProfile {
   linkedProviders: Record<string, string>
 }
 
-export interface UserStats {
-  filmsWatched: number
+export interface CinemaStats {
+  visitsCount: number
   monthlyAverage: number
-  topCinemas: Array<{ name: string; visits: number }>
+  topVenues: Array<{ name: string; visits: number }>
   favoriteGenres: string[]
   mostWatchedDirector: string
   recentFavorite: string
 }
 
+export interface MuseumStats {
+  visitsCount: number
+  monthlyAverage: number
+  topVenues: Array<{ name: string; visits: number }>
+  favoriteCategories: string[]
+  favoriteArtist: string
+  recentFavorite: string
+}
+
 export interface ProfileResponse {
   user: UserProfile
-  stats: UserStats
+  cinemaStats: CinemaStats | null
+  museumStats: MuseumStats | null
 }
 
 export interface Match {
@@ -32,7 +42,9 @@ export interface Match {
   favoriteFilm: string
   bio: string
   filmsWatched: number
+  museumsVisited: number
   topCinema: string
+  topMuseum: string | null
 }
 
 export async function fetchProfile(userId: string): Promise<ProfileResponse> {
@@ -52,6 +64,16 @@ export async function ingestCineville(userId: string, passNumber: string) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId, passNumber }),
+  })
+  if (!res.ok) throw new Error('Ingest failed')
+  return res.json()
+}
+
+export async function ingestMuseumkaart(userId: string, cardNumber: string) {
+  const res = await fetch(`${BASE}/ingest/museumkaart`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, cardNumber }),
   })
   if (!res.ok) throw new Error('Ingest failed')
   return res.json()

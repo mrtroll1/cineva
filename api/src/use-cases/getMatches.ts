@@ -1,4 +1,5 @@
 import { userRepository } from '../repositories/userRepository.js'
+import { visitRepository } from '../repositories/visitRepository.js'
 
 const GENRE_LIST = ['Arthouse', 'Drama', 'Sci-Fi', 'Documentary', 'Thriller', 'Comedy', 'Horror', 'Romance']
 
@@ -25,16 +26,36 @@ function pickRandom<T>(arr: T[], min: number, max: number): T[] {
 export async function getMatches(userId: string, limit = 10) {
   const users = await userRepository.findRandomExcluding(userId, limit)
 
-  return users.map((u, i) => ({
-    id: u.id,
-    name: `${u.name} ${u.lastName}`,
-    photo: u.photoUrl,
-    city: 'Amsterdam', // placeholder — city not in user table
-    compatibility: Math.floor(Math.random() * 25) + 75, // 75–100
-    sharedGenres: pickRandom(GENRE_LIST, 2, 4),
-    favoriteFilm: FAVORITE_FILMS[i % FAVORITE_FILMS.length],
-    bio: BIOS[i % BIOS.length],
-    filmsWatched: Math.floor(Math.random() * 300) + 100,
-    topCinema: 'Eye Filmmuseum', // placeholder
-  }))
+  const results = await Promise.all(
+    users.map(async (u, i) => {
+      const providers = (u.linkedProviders ?? {}) as Record<string, string>
+      const hasMuseumkaart = 'museumkaart' in providers
+
+      let museumsVisited = 0
+      let topMuseum: string | null = null
+
+      if (hasMuseumkaart) {
+        const museumStats = await visitRepository.getStatsByUserIdAndVentureType(u.id, 'MUSEUM')
+        museumsVisited = museumStats.visitsCount
+        topMuseum = museumStats.topVenues[0]?.name ?? null
+      }
+
+      return {
+        id: u.id,
+        name: `${u.name} ${u.lastName}`,
+        photo: u.photoUrl,
+        city: 'Amsterdam',
+        compatibility: Math.floor(Math.random() * 25) + 75,
+        sharedGenres: pickRandom(GENRE_LIST, 2, 4),
+        favoriteFilm: FAVORITE_FILMS[i % FAVORITE_FILMS.length],
+        bio: BIOS[i % BIOS.length],
+        filmsWatched: Math.floor(Math.random() * 300) + 100,
+        museumsVisited,
+        topCinema: 'Eye Filmmuseum',
+        topMuseum,
+      }
+    })
+  )
+
+  return results
 }
