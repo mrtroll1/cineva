@@ -1,5 +1,0 @@
-{
-  "name": "cineva",
-  "private": true,
-  "workspaces": ["client/web", "api"]
-}

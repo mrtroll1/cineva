@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router"
 import { motion } from "framer-motion"
 import {
   Film,
@@ -12,14 +13,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { StatBadge } from "@/components/StatBadge"
 import { useProfile } from "@/hooks/useProfile"
+import { CURRENT_USER_ID } from "@/lib/constants"
 
-interface ProfileProps {
-  userId: string
-  onFindMatches: () => void
-}
-
-export function Profile({ userId, onFindMatches }: ProfileProps) {
-  const { data, loading } = useProfile(userId)
+export function Profile() {
+  const navigate = useNavigate()
+  const { data, loading } = useProfile(CURRENT_USER_ID)
 
   if (loading || !data) {
     return (
@@ -158,7 +156,7 @@ export function Profile({ userId, onFindMatches }: ProfileProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
         >
-          <Button onClick={onFindMatches} size="lg" className="w-full">
+          <Button onClick={() => navigate("/match")} size="lg" className="w-full">
             Find Matches
           </Button>
         </motion.div>

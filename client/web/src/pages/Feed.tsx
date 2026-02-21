@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, X, Heart, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -6,15 +7,12 @@ import { Logo } from "@/components/Logo"
 import { MatchCard } from "@/components/MatchCard"
 import { useMatches } from "@/hooks/useMatches"
 import { useProfile } from "@/hooks/useProfile"
+import { CURRENT_USER_ID } from "@/lib/constants"
 
-interface FeedProps {
-  userId: string
-  onBack: () => void
-}
-
-export function Feed({ userId, onBack }: FeedProps) {
-  const { data: matches, loading: matchesLoading } = useMatches(userId)
-  const { data: profileData } = useProfile(userId)
+export function Feed() {
+  const navigate = useNavigate()
+  const { data: matches, loading: matchesLoading } = useMatches(CURRENT_USER_ID)
+  const { data: profileData } = useProfile(CURRENT_USER_ID)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showMatch, setShowMatch] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
@@ -68,7 +66,7 @@ export function Feed({ userId, onBack }: FeedProps) {
     >
       {/* Top bar */}
       <div className="flex w-full max-w-md items-center justify-between px-6 py-4">
-        <Button variant="ghost" size="sm" onClick={onBack} className="gap-1.5">
+        <Button variant="ghost" size="sm" onClick={() => navigate("/profile")} className="gap-1.5">
           <ArrowLeft className="h-4 w-4" />
           Profile
         </Button>
@@ -121,9 +119,9 @@ export function Feed({ userId, onBack }: FeedProps) {
           </div>
           <h3 className="font-serif text-2xl text-stone-800">You've seen everyone!</h3>
           <p className="text-center text-sm text-stone-500 max-w-xs">
-            Check back later for new cinema lovers in your area.
+            Check back later for new culture lovers in your area
           </p>
-          <Button onClick={onBack} variant="outline" className="mt-2">
+          <Button onClick={() => navigate("/profile")} variant="outline" className="mt-2">
             Back to profile
           </Button>
         </motion.div>

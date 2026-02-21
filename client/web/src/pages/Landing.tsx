@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router"
 import { motion } from "framer-motion"
 import { Ticket, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -6,11 +7,8 @@ import { Input } from "@/components/ui/input"
 import { ingestCineville } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
-interface LandingProps {
-  onConnect: (userId: string) => void
-}
-
-export function Landing({ onConnect }: LandingProps) {
+export function Landing() {
+  const navigate = useNavigate()
   const [passNumber, setPassNumber] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -26,7 +24,7 @@ export function Landing({ onConnect }: LandingProps) {
 
     setTimeout(() => {
       setIsLoading(false)
-      onConnect(CURRENT_USER_ID)
+      navigate("/profile")
     }, 1800)
   }
 
@@ -56,7 +54,7 @@ export function Landing({ onConnect }: LandingProps) {
             cin<span className="text-amber-500">e</span>vá
           </h1>
           <p className="text-center text-lg text-stone-500">
-            Find your cinema soulmate
+            Find your events soulmate
           </p>
         </motion.div>
 
@@ -87,7 +85,7 @@ export function Landing({ onConnect }: LandingProps) {
             className="w-full"
             size="lg"
           >
-            Connect my Cineville
+            Connect me!
             <ArrowRight className="h-4 w-4" />
           </Button>
 
@@ -119,7 +117,7 @@ export function Landing({ onConnect }: LandingProps) {
           transition={{ delay: 0.8 }}
           className="text-center text-xs text-stone-400"
         >
-          By connecting, your film preferences will be used to find compatible cinema lovers across Europe.
+          By connecting, your visit history will be used to find culture lovers across Europe.
         </motion.p>
       </div>
     </motion.div>
