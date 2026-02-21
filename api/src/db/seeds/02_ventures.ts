@@ -13,12 +13,23 @@ const CINEMAS = [
   { name: 'Kino Rotterdam', city: 'Rotterdam', country: 'NL', type: 'CINEMA' as const },
 ]
 
+const MUSEUMS = [
+  { name: 'Rijksmuseum', city: 'Amsterdam', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'Van Gogh Museum', city: 'Amsterdam', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'Stedelijk Museum', city: 'Amsterdam', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'FOAM', city: 'Amsterdam', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'Mauritshuis', city: 'Den Haag', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'Bonnefanten', city: 'Maastricht', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'Groninger Museum', city: 'Groningen', country: 'NL', type: 'MUSEUM' as const },
+  { name: 'Centraal Museum', city: 'Utrecht', country: 'NL', type: 'MUSEUM' as const },
+]
+
 export async function seedVentures(db: any): Promise<Record<string, string>> {
   console.log('Seeding ventures...')
 
   const rows = await db
     .insert(ventures)
-    .values(CINEMAS)
+    .values([...CINEMAS, ...MUSEUMS])
     .onConflictDoNothing()
     .returning({ id: ventures.id, name: ventures.name })
 

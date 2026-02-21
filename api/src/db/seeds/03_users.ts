@@ -7,7 +7,7 @@ const SEED_USERS = [
     lastName: 'de Vries',
     photoUrl: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face',
     email: 'anouk@cineva.nl',
-    linkedProviders: { cineville: '$93278420387' },
+    linkedProviders: { cineville: '$93278420387', museumkaart: '3920184756' },
   },
   {
     name: 'Lucas',
@@ -21,14 +21,14 @@ const SEED_USERS = [
     lastName: 'Lindqvist',
     photoUrl: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=400&fit=crop&crop=face',
     email: 'sofia.lindqvist@email.com',
-    linkedProviders: { cineville: '$29384756102' },
+    linkedProviders: { cineville: '$29384756102', museumkaart: '5829301746' },
   },
   {
     name: 'Daan',
     lastName: 'Bakker',
     photoUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face',
     email: 'daan.bakker@email.com',
-    linkedProviders: { cineville: '$38475610293' },
+    linkedProviders: { cineville: '$38475610293', museumkaart: '7461029385' },
   },
   {
     name: 'Mila',
@@ -49,7 +49,7 @@ const SEED_USERS = [
     lastName: 'van der Berg',
     photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face',
     email: 'emma.vanderberg@email.com',
-    linkedProviders: { cineville: '$65102938471' },
+    linkedProviders: { cineville: '$65102938471', museumkaart: '1938475602' },
   },
 ]
 

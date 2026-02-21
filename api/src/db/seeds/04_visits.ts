@@ -12,15 +12,26 @@ const ALL_CINEMAS = [
   'FC Hyena', 'Kino Rotterdam',
 ]
 
-// Each user gets a random number of visits (100–450 range)
+const ALL_MUSEUMS = [
+  'Rijksmuseum', 'Van Gogh Museum', 'Stedelijk Museum', 'FOAM',
+  'Mauritshuis', 'Bonnefanten', 'Groninger Museum', 'Centraal Museum',
+]
+
 const USER_VISIT_COUNTS: Record<string, number> = {
-  'anouk@cineva.nl': 247,
-  'lucas.moreau@email.com': 312,
-  'sofia.lindqvist@email.com': 189,
-  'daan.bakker@email.com': 421,
-  'mila.jansen@email.com': 276,
-  'thomas.witt@email.com': 358,
-  'emma.vanderberg@email.com': 198,
+  'anouk@cineva.nl': 124,
+  'lucas.moreau@email.com': 156,
+  'sofia.lindqvist@email.com': 95,
+  'daan.bakker@email.com': 210,
+  'mila.jansen@email.com': 138,
+  'thomas.witt@email.com': 179,
+  'emma.vanderberg@email.com': 99,
+}
+
+const USER_MUSEUM_VISIT_COUNTS: Record<string, number> = {
+  'anouk@cineva.nl': 14,
+  'sofia.lindqvist@email.com': 9,
+  'daan.bakker@email.com': 21,
+  'emma.vanderberg@email.com': 16,
 }
 
 function generateRandomVisits(
@@ -77,7 +88,35 @@ export async function seedVisits(
     }
 
     totalInserted += rows.length
-    console.log(`  ${email}: ${rows.length} visits`)
+    console.log(`  ${email}: ${rows.length} cinema visits`)
+  }
+
+  // Seed museum visits
+  for (const [email, count] of Object.entries(USER_MUSEUM_VISIT_COUNTS)) {
+    const userId = userIds[email]
+    if (!userId) {
+      console.warn(`  Skipping museum visits for ${email} — user not found`)
+      continue
+    }
+
+    const visits = generateRandomVisits(count, ALL_MUSEUMS)
+
+    const rows = visits
+      .map((v) => ({
+        userId,
+        ventureId: ventureIds[v.cinema],
+        date: v.date,
+        providerName: 'museumkaart',
+      }))
+      .filter((r) => r.ventureId)
+
+    for (let i = 0; i < rows.length; i += 500) {
+      const batch = rows.slice(i, i + 500)
+      await db.insert(userVisits).values(batch).onConflictDoNothing()
+    }
+
+    totalInserted += rows.length
+    console.log(`  ${email}: ${rows.length} museum visits`)
   }
 
   console.log(`  Total: ${totalInserted} visits`)
