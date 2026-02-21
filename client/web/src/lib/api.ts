@@ -45,12 +45,33 @@ export interface Match {
   museumsVisited: number
   topCinema: string
   topMuseum: string | null
+  monthlyAverage: number
+  topCinemas: Array<{ name: string; visits: number }>
+  museumMonthlyAverage: number
+  topMuseums: Array<{ name: string; visits: number }>
 }
 
-export async function fetchProfile(userId: string): Promise<ProfileResponse> {
+const profileCache = new Map<string, Promise<ProfileResponse>>()
+
+export function prefetchProfile(userId: string): void {
+  if (!profileCache.has(userId)) {
+    profileCache.set(userId, fetchProfileRaw(userId))
+  }
+}
+
+async function fetchProfileRaw(userId: string): Promise<ProfileResponse> {
   const res = await fetch(`${BASE}/profile/${userId}`)
   if (!res.ok) throw new Error('Failed to fetch profile')
   return res.json()
+}
+
+export async function fetchProfile(userId: string): Promise<ProfileResponse> {
+  const cached = profileCache.get(userId)
+  if (cached) {
+    profileCache.delete(userId)
+    return cached
+  }
+  return fetchProfileRaw(userId)
 }
 
 export async function fetchMatches(userId: string, limit = 10): Promise<Match[]> {

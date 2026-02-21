@@ -31,13 +31,19 @@ export async function getMatches(userId: string, limit = 10) {
       const providers = (u.linkedProviders ?? {}) as Record<string, string>
       const hasMuseumkaart = 'museumkaart' in providers
 
+      const cinemaStats = await visitRepository.getStatsByUserIdAndVentureType(u.id, 'CINEMA')
+
       let museumsVisited = 0
       let topMuseum: string | null = null
+      let museumMonthlyAverage = 0
+      let topMuseums: Array<{ name: string; visits: number }> = []
 
       if (hasMuseumkaart) {
         const museumStats = await visitRepository.getStatsByUserIdAndVentureType(u.id, 'MUSEUM')
         museumsVisited = museumStats.visitsCount
         topMuseum = museumStats.topVenues[0]?.name ?? null
+        museumMonthlyAverage = museumStats.monthlyAverage
+        topMuseums = museumStats.topVenues
       }
 
       return {
@@ -49,10 +55,14 @@ export async function getMatches(userId: string, limit = 10) {
         sharedGenres: pickRandom(GENRE_LIST, 2, 4),
         favoriteFilm: FAVORITE_FILMS[i % FAVORITE_FILMS.length],
         bio: BIOS[i % BIOS.length],
-        filmsWatched: Math.floor(Math.random() * 300) + 100,
+        filmsWatched: cinemaStats.visitsCount || Math.floor(Math.random() * 300) + 100,
         museumsVisited,
-        topCinema: 'Eye Filmmuseum',
+        topCinema: cinemaStats.topVenues[0]?.name ?? 'Eye Filmmuseum',
         topMuseum,
+        monthlyAverage: cinemaStats.monthlyAverage,
+        topCinemas: cinemaStats.topVenues,
+        museumMonthlyAverage,
+        topMuseums,
       }
     })
   )

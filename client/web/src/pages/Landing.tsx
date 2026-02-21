@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Ticket, Landmark, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ingestCineville, ingestMuseumkaart } from "@/lib/api"
+import { ingestCineville, ingestMuseumkaart, prefetchProfile } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 export function Landing() {
@@ -31,6 +31,8 @@ export function Landing() {
     } catch {
       // Ingest failure is non-blocking for the prototype
     }
+
+    prefetchProfile(CURRENT_USER_ID)
 
     setTimeout(() => {
       setIsLoading(false)
