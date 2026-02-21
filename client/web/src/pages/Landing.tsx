@@ -143,7 +143,7 @@ export function Landing() {
           transition={{ delay: 0.8 }}
           className="text-center text-xs text-stone-400"
         >
-          By connecting, your visit history will be used to find culture lovers across Europe.
+          By linking an events subscription, you allow your visit history to be used by Cinevá.
         </motion.p>
       </div>
     </motion.div>
