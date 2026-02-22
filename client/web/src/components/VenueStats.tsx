@@ -30,13 +30,16 @@ interface VenueStatsProps {
   museumStats: MuseumStats | null
   performingArtsStats: PerformingArtsStats | null
   invites: Invite[] | null
+  forceTab: ProviderTab | null
   onLinkProvider: (provider: ProviderTab) => void
 }
 
-export function VenueStats({ hasCineville, hasMuseumkaart, hasWeArePublic, cinemaStats, museumStats, performingArtsStats, invites, onLinkProvider }: VenueStatsProps) {
+export function VenueStats({ hasCineville, hasMuseumkaart, hasWeArePublic, cinemaStats, museumStats, performingArtsStats, invites, forceTab, onLinkProvider }: VenueStatsProps) {
   const [activeTab, setActiveTab] = useState<Tab | null>(null)
 
-  if (activeTab === null) {
+  if (forceTab && activeTab !== forceTab) {
+    setActiveTab(forceTab)
+  } else if (activeTab === null) {
     if (hasCineville) setActiveTab("cineville")
     else if (hasMuseumkaart) setActiveTab("museumkaart")
     else if (hasWeArePublic) setActiveTab("wearepublic")

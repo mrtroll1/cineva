@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Ticket, Landmark, Music, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ingestCineville, ingestMuseumkaart, ingestWeArePublic, prefetchProfile } from "@/lib/api"
+import { ingestCineville, ingestMuseumkaart, prefetchProfile } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 export function Landing() {
@@ -29,7 +29,7 @@ export function Landing() {
         promises.push(ingestMuseumkaart(CURRENT_USER_ID, cardNumber.trim()))
       }
       if (memberId.trim()) {
-        promises.push(ingestWeArePublic(CURRENT_USER_ID, memberId.trim()))
+        localStorage.setItem('cineva:wap_linked', '1')
       }
       await Promise.allSettled(promises)
     } catch {

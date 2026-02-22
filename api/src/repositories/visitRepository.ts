@@ -64,7 +64,7 @@ export const visitRepository = {
     }
   },
 
-  async getStatsByUserIdAndVenueType(userId: string, venueType: 'CINEMA' | 'MUSEUM') {
+  async getStatsByUserIdAndVenueType(userId: string, venueType: 'CINEMA' | 'MUSEUM' | 'PERFORMING_ARTS') {
     const condition = and(
       eq(userVisits.userId, userId),
       eq(venues.type, venueType),

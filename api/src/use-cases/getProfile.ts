@@ -12,8 +12,6 @@ export async function getProfile(userId: string) {
   const providers = (user.linkedProviders ?? {}) as Record<string, string>
   const hasCineville = 'cineville' in providers
   const hasMuseumkaart = 'museumkaart' in providers
-  const hasWeArePublic = 'wearepublic' in providers
-
   let cinemaStats = null
   let museumStats = null
   let performingArtsStats = null
@@ -42,12 +40,13 @@ export async function getProfile(userId: string) {
     }
   }
 
-  if (hasWeArePublic) {
-    const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'PERFORMING_ARTS')
+  // Always compute — client controls visibility via localStorage (demo-friendly)
+  const paStats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'PERFORMING_ARTS')
+  if (paStats.visitsCount > 0) {
     performingArtsStats = {
-      visitsCount: stats.visitsCount,
-      monthlyAverage: stats.monthlyAverage,
-      topVenues: stats.topVenues,
+      visitsCount: paStats.visitsCount,
+      monthlyAverage: paStats.monthlyAverage,
+      topVenues: paStats.topVenues,
       favoriteGenres: PLACEHOLDER_PERFORMING_ARTS_GENRES,
       favoriteArtist: 'Internationaal Theater Amsterdam',
       recentFavorite: 'Cate Le Bon at Paradiso',

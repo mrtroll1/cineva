@@ -17,6 +17,49 @@ const ALL_MUSEUMS = [
   'Mauritshuis', 'Bonnefanten', 'Groninger Museum', 'Centraal Museum',
 ]
 
+/**
+ * Curated (fixed) We Are Public visits for Anouk.
+ * Pre-seeded so the stats are always available — the client controls
+ * whether to show them via localStorage (demo-friendly).
+ */
+const ANOUK_WAP_VISITS: Array<{ venue: string; date: string }> = [
+  { venue: 'Paradiso', date: '2023-02-11' },
+  { venue: 'Melkweg', date: '2023-03-04' },
+  { venue: 'Concertgebouw', date: '2023-04-18' },
+  { venue: 'Paradiso', date: '2023-05-27' },
+  { venue: 'Stadsschouwburg', date: '2023-06-09' },
+  { venue: 'TivoliVredenburg', date: '2023-07-15' },
+  { venue: 'Carré', date: '2023-08-22' },
+  { venue: 'Paradiso', date: '2023-09-30' },
+  { venue: 'Melkweg', date: '2023-10-14' },
+  { venue: 'Concertgebouw', date: '2023-11-05' },
+  { venue: 'De Oosterpoort', date: '2023-12-01' },
+  { venue: 'Paradiso', date: '2024-01-20' },
+  { venue: 'Melkweg', date: '2024-02-14' },
+  { venue: 'Stadsschouwburg', date: '2024-03-08' },
+  { venue: 'Carré', date: '2024-03-29' },
+  { venue: 'TivoliVredenburg', date: '2024-04-12' },
+  { venue: 'Paradiso', date: '2024-05-03' },
+  { venue: 'Concertgebouw', date: '2024-06-21' },
+  { venue: 'Melkweg', date: '2024-07-07' },
+  { venue: 'Paradiso', date: '2024-08-16' },
+  { venue: 'Mezz', date: '2024-09-01' },
+  { venue: 'Carré', date: '2024-09-28' },
+  { venue: 'Paradiso', date: '2024-10-19' },
+  { venue: 'Melkweg', date: '2024-11-02' },
+  { venue: 'Concertgebouw', date: '2024-11-30' },
+  { venue: 'TivoliVredenburg', date: '2024-12-14' },
+  { venue: 'Paradiso', date: '2025-01-11' },
+  { venue: 'Stadsschouwburg', date: '2025-02-08' },
+  { venue: 'Melkweg', date: '2025-03-15' },
+  { venue: 'Carré', date: '2025-04-05' },
+  { venue: 'Paradiso', date: '2025-05-24' },
+  { venue: 'Concertgebouw', date: '2025-06-07' },
+  { venue: 'De Oosterpoort', date: '2025-07-19' },
+  { venue: 'Melkweg', date: '2025-08-30' },
+  { venue: 'Paradiso', date: '2025-10-11' },
+]
+
 const USER_VISIT_COUNTS: Record<string, number> = {
   'anouk@cineva.nl': 124,
   'lucas.moreau@email.com': 156,
@@ -117,6 +160,27 @@ export async function seedVisits(
 
     totalInserted += rows.length
     console.log(`  ${email}: ${rows.length} museum visits`)
+  }
+
+  // Seed We Are Public visits for Anouk (curated, always available)
+  const anoukId = userIds['anouk@cineva.nl']
+  if (anoukId) {
+    const rows = ANOUK_WAP_VISITS
+      .map((v) => ({
+        userId: anoukId,
+        venueId: venueIds[v.venue],
+        date: v.date,
+        providerName: 'wearepublic',
+      }))
+      .filter((r) => r.venueId)
+
+    for (let i = 0; i < rows.length; i += 500) {
+      const batch = rows.slice(i, i + 500)
+      await db.insert(userVisits).values(batch).onConflictDoNothing()
+    }
+
+    totalInserted += rows.length
+    console.log(`  anouk@cineva.nl: ${rows.length} performing arts visits`)
   }
 
   console.log(`  Total: ${totalInserted} visits`)

@@ -15,7 +15,7 @@ import { VenueStats } from "@/components/VenueStats"
 import { InvitesList } from "@/components/InvitesList"
 import { useProfile } from "@/hooks/useProfile"
 import { useInvites } from "@/hooks/useInvites"
-import { ingestCineville, ingestMuseumkaart, ingestWeArePublic } from "@/lib/api"
+import { ingestCineville, ingestMuseumkaart } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 type ProviderTab = "cineville" | "museumkaart" | "wearepublic"
@@ -33,13 +33,14 @@ export function Profile() {
   const [linkModal, setLinkModal] = useState<ProviderTab | null>(null)
   const [linkInput, setLinkInput] = useState("")
   const [linking, setLinking] = useState(false)
+  const [hasWeArePublic, setHasWeArePublic] = useState(() => localStorage.getItem('cineva:wap_linked') === '1')
+  const [forceTab, setForceTab] = useState<ProviderTab | null>(null)
 
   if (loading || !data) return null
 
   const { user, cinemaStats, museumStats, performingArtsStats } = data
   const hasCineville = 'cineville' in (user.linkedProviders ?? {})
   const hasMuseumkaart = 'museumkaart' in (user.linkedProviders ?? {})
-  const hasWeArePublic = 'wearepublic' in (user.linkedProviders ?? {})
   const hasInvites = invites && invites.length > 0
 
   const handleLink = async () => {
@@ -51,9 +52,12 @@ export function Profile() {
       } else if (linkModal === "museumkaart") {
         await ingestMuseumkaart(CURRENT_USER_ID, linkInput.trim())
       } else {
-        await ingestWeArePublic(CURRENT_USER_ID, linkInput.trim())
+        // We Are Public: localStorage-only (pre-seeded stats, no DB write)
+        localStorage.setItem('cineva:wap_linked', '1')
+        setHasWeArePublic(true)
       }
       refetch()
+      setForceTab(linkModal)
     } catch {
       // non-blocking
     }
@@ -132,6 +136,7 @@ export function Profile() {
               museumStats={museumStats}
               performingArtsStats={performingArtsStats}
               invites={invites}
+              forceTab={forceTab}
               onLinkProvider={setLinkModal}
             />
           </div>
