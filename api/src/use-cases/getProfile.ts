@@ -9,38 +9,35 @@ export async function getProfile(userId: string) {
   const user = await userRepository.findById(userId)
   if (!user) return null
 
-  const providers = (user.linkedProviders ?? {}) as Record<string, string>
-  const hasCineville = 'cineville' in providers
-  const hasMuseumkaart = 'museumkaart' in providers
   let cinemaStats = null
   let museumStats = null
   let performingArtsStats = null
 
-  if (hasCineville) {
-    const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'CINEMA')
+  // Always compute stats if visits exist — client controls visibility via localStorage
+  const cStats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'CINEMA')
+  if (cStats.visitsCount > 0) {
     cinemaStats = {
-      visitsCount: stats.visitsCount,
-      monthlyAverage: stats.monthlyAverage,
-      topVenues: stats.topVenues,
+      visitsCount: cStats.visitsCount,
+      monthlyAverage: cStats.monthlyAverage,
+      topVenues: cStats.topVenues,
       favoriteGenres: PLACEHOLDER_CINEMA_GENRES,
       mostWatchedDirector: 'Denis Villeneuve',
       recentFavorite: 'Past Lives',
     }
   }
 
-  if (hasMuseumkaart) {
-    const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'MUSEUM')
+  const mStats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'MUSEUM')
+  if (mStats.visitsCount > 0) {
     museumStats = {
-      visitsCount: stats.visitsCount,
-      monthlyAverage: stats.monthlyAverage,
-      topVenues: stats.topVenues,
+      visitsCount: mStats.visitsCount,
+      monthlyAverage: mStats.monthlyAverage,
+      topVenues: mStats.topVenues,
       favoriteCategories: PLACEHOLDER_MUSEUM_CATEGORIES,
       favoriteArtist: 'Vermeer',
       recentFavorite: 'Dalí Surreal at Stedelijk',
     }
   }
 
-  // Always compute — client controls visibility via localStorage (demo-friendly)
   const paStats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'PERFORMING_ARTS')
   if (paStats.visitsCount > 0) {
     performingArtsStats = {
@@ -59,7 +56,6 @@ export async function getProfile(userId: string) {
       name: `${user.name} ${user.lastName}`,
       photo: user.photoUrl,
       email: user.email,
-      linkedProviders: providers,
     },
     cinemaStats,
     museumStats,

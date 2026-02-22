@@ -7,7 +7,7 @@ const SEED_USERS = [
     lastName: 'de Vries',
     photoUrl: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=400&h=400&fit=crop&crop=face',
     email: 'anouk@cineva.nl',
-    linkedProviders: { cineville: '$93278420387', museumkaart: '3920184756' },
+    linkedProviders: {},
   },
   {
     name: 'Lucas',

@@ -5,7 +5,6 @@ export interface UserProfile {
   name: string
   photo: string | null
   email: string
-  linkedProviders: Record<string, string>
 }
 
 export interface CinemaStats {

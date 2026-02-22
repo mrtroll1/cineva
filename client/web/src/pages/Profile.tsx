@@ -15,7 +15,6 @@ import { VenueStats } from "@/components/VenueStats"
 import { InvitesList } from "@/components/InvitesList"
 import { useProfile } from "@/hooks/useProfile"
 import { useInvites } from "@/hooks/useInvites"
-import { ingestCineville, ingestMuseumkaart } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 type ProviderTab = "cineville" | "museumkaart" | "wearepublic"
@@ -33,34 +32,36 @@ export function Profile() {
   const [linkModal, setLinkModal] = useState<ProviderTab | null>(null)
   const [linkInput, setLinkInput] = useState("")
   const [linking, setLinking] = useState(false)
-  const [hasWeArePublic, setHasWeArePublic] = useState(() => localStorage.getItem('cineva:wap_linked') === '1')
+  const [linkedProviders, setLinkedProviders] = useState(() => ({
+    cineville: localStorage.getItem('cineva:cineville_linked') === '1',
+    museumkaart: localStorage.getItem('cineva:museumkaart_linked') === '1',
+    wearepublic: localStorage.getItem('cineva:wap_linked') === '1',
+  }))
   const [forceTab, setForceTab] = useState<ProviderTab | null>(null)
 
   if (loading || !data) return null
 
   const { user, cinemaStats, museumStats, performingArtsStats } = data
-  const hasCineville = 'cineville' in (user.linkedProviders ?? {})
-  const hasMuseumkaart = 'museumkaart' in (user.linkedProviders ?? {})
+  const hasCineville = linkedProviders.cineville
+  const hasMuseumkaart = linkedProviders.museumkaart
+  const hasWeArePublic = linkedProviders.wearepublic
   const hasInvites = invites && invites.length > 0
 
-  const handleLink = async () => {
+  const STORAGE_KEYS: Record<ProviderTab, string> = {
+    cineville: 'cineva:cineville_linked',
+    museumkaart: 'cineva:museumkaart_linked',
+    wearepublic: 'cineva:wap_linked',
+  }
+
+  const handleLink = () => {
     if (!linkInput.trim() || !linkModal) return
     setLinking(true)
-    try {
-      if (linkModal === "cineville") {
-        await ingestCineville(CURRENT_USER_ID, linkInput.trim())
-      } else if (linkModal === "museumkaart") {
-        await ingestMuseumkaart(CURRENT_USER_ID, linkInput.trim())
-      } else {
-        // We Are Public: localStorage-only (pre-seeded stats, no DB write)
-        localStorage.setItem('cineva:wap_linked', '1')
-        setHasWeArePublic(true)
-      }
-      refetch()
-      setForceTab(linkModal)
-    } catch {
-      // non-blocking
-    }
+
+    // All provider linking is localStorage-only (visits are pre-seeded)
+    localStorage.setItem(STORAGE_KEYS[linkModal], '1')
+    setLinkedProviders((prev) => ({ ...prev, [linkModal]: true }))
+    setForceTab(linkModal)
+
     setLinking(false)
     setLinkModal(null)
     setLinkInput("")

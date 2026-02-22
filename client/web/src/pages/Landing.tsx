@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Ticket, Landmark, Music, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ingestCineville, ingestMuseumkaart, prefetchProfile } from "@/lib/api"
+import { prefetchProfile } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 export function Landing() {
@@ -20,21 +20,10 @@ export function Landing() {
     if (!hasInput) return
     setIsLoading(true)
 
-    try {
-      const promises: Promise<unknown>[] = []
-      if (passNumber.trim()) {
-        promises.push(ingestCineville(CURRENT_USER_ID, passNumber.trim()))
-      }
-      if (cardNumber.trim()) {
-        promises.push(ingestMuseumkaart(CURRENT_USER_ID, cardNumber.trim()))
-      }
-      if (memberId.trim()) {
-        localStorage.setItem('cineva:wap_linked', '1')
-      }
-      await Promise.allSettled(promises)
-    } catch {
-      // Ingest failure is non-blocking for the prototype
-    }
+    // All provider linking is localStorage-only (visits are pre-seeded)
+    if (passNumber.trim()) localStorage.setItem('cineva:cineville_linked', '1')
+    if (cardNumber.trim()) localStorage.setItem('cineva:museumkaart_linked', '1')
+    if (memberId.trim()) localStorage.setItem('cineva:wap_linked', '1')
 
     prefetchProfile(CURRENT_USER_ID)
 
