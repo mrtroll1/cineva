@@ -24,12 +24,23 @@ const MUSEUMS = [
   { name: 'Centraal Museum', city: 'Utrecht', country: 'NL', type: 'MUSEUM' as const },
 ]
 
+const PERFORMING_ARTS = [
+  { name: 'Paradiso', city: 'Amsterdam', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'Melkweg', city: 'Amsterdam', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'Concertgebouw', city: 'Amsterdam', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'Carré', city: 'Amsterdam', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'TivoliVredenburg', city: 'Utrecht', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'Stadsschouwburg', city: 'Amsterdam', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'Mezz', city: 'Breda', country: 'NL', type: 'PERFORMING_ARTS' as const },
+  { name: 'De Oosterpoort', city: 'Groningen', country: 'NL', type: 'PERFORMING_ARTS' as const },
+]
+
 export async function seedVenues(db: any): Promise<Record<string, string>> {
   console.log('Seeding venues...')
 
   const rows = await db
     .insert(venues)
-    .values([...CINEMAS, ...MUSEUMS])
+    .values([...CINEMAS, ...MUSEUMS, ...PERFORMING_ARTS])
     .onConflictDoNothing()
     .returning({ id: venues.id, name: venues.name })
 

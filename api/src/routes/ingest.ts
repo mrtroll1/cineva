@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { ingestCinevilleVisits, ingestMuseumkaartVisits } from '../use-cases/ingestVisits.js'
+import { ingestCinevilleVisits, ingestMuseumkaartVisits, ingestWeArePublicVisits } from '../use-cases/ingestVisits.js'
 
 export async function ingestRoutes(app: FastifyInstance) {
   app.post<{ Body: { userId: string; passNumber: string } }>('/ingest/cineville', async (request, reply) => {
@@ -21,6 +21,17 @@ export async function ingestRoutes(app: FastifyInstance) {
     }
 
     const result = await ingestMuseumkaartVisits(userId, cardNumber)
+    return result
+  })
+
+  app.post<{ Body: { userId: string; memberId: string } }>('/ingest/wearepublic', async (request, reply) => {
+    const { userId, memberId } = request.body
+
+    if (!userId || !memberId) {
+      return reply.status(400).send({ error: 'userId and memberId are required' })
+    }
+
+    const result = await ingestWeArePublicVisits(userId, memberId)
     return result
   })
 }

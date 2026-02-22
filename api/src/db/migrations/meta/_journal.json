@@ -15,6 +15,13 @@
       "when": 1771643998513,
       "tag": "0001_third_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771900000000,
+      "tag": "0002_add_performing_arts",
+      "breakpoints": true
     }
   ]
 }

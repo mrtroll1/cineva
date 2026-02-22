@@ -6,6 +6,7 @@ import {
   Loader2,
   Ticket,
   Landmark,
+  Music,
   X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -14,10 +15,16 @@ import { VenueStats } from "@/components/VenueStats"
 import { InvitesList } from "@/components/InvitesList"
 import { useProfile } from "@/hooks/useProfile"
 import { useInvites } from "@/hooks/useInvites"
-import { ingestCineville, ingestMuseumkaart } from "@/lib/api"
+import { ingestCineville, ingestMuseumkaart, ingestWeArePublic } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
-type ProviderTab = "cineville" | "museumkaart"
+type ProviderTab = "cineville" | "museumkaart" | "wearepublic"
+
+const PROVIDER_CONFIG: Record<ProviderTab, { title: string; label: string; placeholder: string; icon: typeof Ticket }> = {
+  cineville: { title: 'Cineville', label: 'Pass number', placeholder: 'e.g. $93278420387', icon: Ticket },
+  museumkaart: { title: 'Museumkaart', label: 'Card number', placeholder: 'e.g. 3920184756', icon: Landmark },
+  wearepublic: { title: 'We Are Public', label: 'Member ID', placeholder: 'e.g. WAP-29481', icon: Music },
+}
 
 export function Profile() {
   const navigate = useNavigate()
@@ -29,9 +36,10 @@ export function Profile() {
 
   if (loading || !data) return null
 
-  const { user, cinemaStats, museumStats } = data
+  const { user, cinemaStats, museumStats, performingArtsStats } = data
   const hasCineville = 'cineville' in (user.linkedProviders ?? {})
   const hasMuseumkaart = 'museumkaart' in (user.linkedProviders ?? {})
+  const hasWeArePublic = 'wearepublic' in (user.linkedProviders ?? {})
   const hasInvites = invites && invites.length > 0
 
   const handleLink = async () => {
@@ -40,8 +48,10 @@ export function Profile() {
     try {
       if (linkModal === "cineville") {
         await ingestCineville(CURRENT_USER_ID, linkInput.trim())
-      } else {
+      } else if (linkModal === "museumkaart") {
         await ingestMuseumkaart(CURRENT_USER_ID, linkInput.trim())
+      } else {
+        await ingestWeArePublic(CURRENT_USER_ID, linkInput.trim())
       }
       refetch()
     } catch {
@@ -51,6 +61,9 @@ export function Profile() {
     setLinkModal(null)
     setLinkInput("")
   }
+
+  const modalConfig = linkModal ? PROVIDER_CONFIG[linkModal] : null
+  const ModalIcon = modalConfig?.icon ?? Ticket
 
   return (
     <motion.div
@@ -114,8 +127,10 @@ export function Profile() {
             <VenueStats
               hasCineville={hasCineville}
               hasMuseumkaart={hasMuseumkaart}
+              hasWeArePublic={hasWeArePublic}
               cinemaStats={cinemaStats}
               museumStats={museumStats}
+              performingArtsStats={performingArtsStats}
               invites={invites}
               onLinkProvider={setLinkModal}
             />
@@ -145,7 +160,7 @@ export function Profile() {
 
       {/* Link provider modal */}
       <AnimatePresence>
-        {linkModal && (
+        {linkModal && modalConfig && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -163,7 +178,7 @@ export function Profile() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-serif text-lg text-stone-800">
-                  Link {linkModal === "cineville" ? "Cineville" : "Museumkaart"}
+                  Link {modalConfig.title}
                 </h3>
                 <button
                   type="button"
@@ -175,16 +190,12 @@ export function Profile() {
               </div>
 
               <label className="mb-2 block text-sm font-medium text-stone-600">
-                {linkModal === "cineville" ? "Pass number" : "Card number"}
+                {modalConfig.label}
               </label>
               <div className="relative mb-4">
-                {linkModal === "cineville" ? (
-                  <Ticket className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                ) : (
-                  <Landmark className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                )}
+                <ModalIcon className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
                 <Input
-                  placeholder={linkModal === "cineville" ? "e.g. $93278420387" : "e.g. 3920184756"}
+                  placeholder={modalConfig.placeholder}
                   value={linkInput}
                   onChange={(e) => setLinkInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleLink()}

@@ -1,19 +1,20 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { motion } from "framer-motion"
-import { Ticket, Landmark, ArrowRight } from "lucide-react"
+import { Ticket, Landmark, Music, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ingestCineville, ingestMuseumkaart, prefetchProfile } from "@/lib/api"
+import { ingestCineville, ingestMuseumkaart, ingestWeArePublic, prefetchProfile } from "@/lib/api"
 import { CURRENT_USER_ID } from "@/lib/constants"
 
 export function Landing() {
   const navigate = useNavigate()
   const [passNumber, setPassNumber] = useState("")
   const [cardNumber, setCardNumber] = useState("")
+  const [memberId, setMemberId] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const hasInput = passNumber.trim() || cardNumber.trim()
+  const hasInput = passNumber.trim() || cardNumber.trim() || memberId.trim()
 
   const handleConnect = async () => {
     if (!hasInput) return
@@ -26,6 +27,9 @@ export function Landing() {
       }
       if (cardNumber.trim()) {
         promises.push(ingestMuseumkaart(CURRENT_USER_ID, cardNumber.trim()))
+      }
+      if (memberId.trim()) {
+        promises.push(ingestWeArePublic(CURRENT_USER_ID, memberId.trim()))
       }
       await Promise.allSettled(promises)
     } catch {
@@ -105,6 +109,20 @@ export function Landing() {
             />
           </div>
 
+          <label className="mb-2 block text-sm font-medium text-stone-700">
+            Your We Are Public member ID
+          </label>
+          <div className="relative mb-4">
+            <Music className="absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-stone-400" />
+            <Input
+              placeholder="e.g. WAP-29481"
+              value={memberId}
+              onChange={(e) => setMemberId(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleConnect()}
+              className="pl-11"
+            />
+          </div>
+
           <Button
             onClick={handleConnect}
             disabled={!hasInput || isLoading}
@@ -134,6 +152,16 @@ export function Landing() {
               </p>
             </motion.div>
           )}
+        </motion.div>
+
+        {/* Demo banner */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="w-full rounded-xl border border-amber-200/60 bg-amber-50/60 px-4 py-3 text-center text-xs text-amber-700/80"
+        >
+          <span className="font-medium">Demo mode</span> — all data is artificial and functionality is limited.
         </motion.div>
 
         {/* Footer note */}

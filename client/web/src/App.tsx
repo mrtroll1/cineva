@@ -1,11 +1,19 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router"
+import { useEffect } from "react"
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router"
 import { Landing } from "@/pages/Landing"
 import { Profile } from "@/pages/Profile"
 import { Feed } from "@/pages/Feed"
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="w-full max-w-lg mx-auto">
         <Routes>
           <Route path="/" element={<Landing />} />

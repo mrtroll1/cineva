@@ -13,7 +13,7 @@ export function InvitesList({ invites }: InvitesListProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.7 }}
+      transition={{ delay: 0.15 }}
     >
       <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
         <Send className="h-4 w-4 text-cineva-500" />

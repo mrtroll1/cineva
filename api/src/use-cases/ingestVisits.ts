@@ -1,5 +1,6 @@
 import { fetchCinevilleHistory } from '../providers/cineville.js'
 import { fetchMuseumkaartHistory } from '../providers/museumkaart.js'
+import { fetchWeArePublicHistory } from '../providers/wearepublic.js'
 import { venueRepository } from '../repositories/venueRepository.js'
 import { visitRepository } from '../repositories/visitRepository.js'
 import { userRepository } from '../repositories/userRepository.js'
@@ -28,6 +29,8 @@ export async function ingestCinevilleVisits(userId: string, passNumber: string) 
     .filter((v): v is NonNullable<typeof v> => v !== null)
 
   const inserted = await visitRepository.createMany(visits)
+
+  await userRepository.updateLinkedProvider(userId, 'cineville', passNumber)
 
   return {
     totalRecords: history.length,
@@ -59,6 +62,41 @@ export async function ingestMuseumkaartVisits(userId: string, cardNumber: string
     .filter((v): v is NonNullable<typeof v> => v !== null)
 
   const inserted = await visitRepository.createMany(visits)
+
+  await userRepository.updateLinkedProvider(userId, 'museumkaart', cardNumber)
+
+  return {
+    totalRecords: history.length,
+    inserted: inserted.length,
+    skipped: history.length - visits.length,
+  }
+}
+
+export async function ingestWeArePublicVisits(userId: string, memberId: string) {
+  const user = await userRepository.findById(userId)
+  if (!user) throw new Error('User not found')
+
+  const history = await fetchWeArePublicHistory(memberId)
+
+  const allVenues = await venueRepository.findAll()
+  const venueMap = new Map(allVenues.map((v) => [v.name, v.id]))
+
+  const visits = history
+    .map((record) => {
+      const venueId = venueMap.get(record.venueName)
+      if (!venueId) return null
+      return {
+        userId,
+        venueId,
+        date: record.date,
+        providerName: 'wearepublic',
+      }
+    })
+    .filter((v): v is NonNullable<typeof v> => v !== null)
+
+  const inserted = await visitRepository.createMany(visits)
+
+  await userRepository.updateLinkedProvider(userId, 'wearepublic', memberId)
 
   return {
     totalRecords: history.length,

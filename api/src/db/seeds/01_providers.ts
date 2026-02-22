@@ -3,6 +3,7 @@ import { providers } from '../schema/index.js'
 const PROVIDERS = [
   { name: 'cineville' },
   { name: 'museumkaart' },
+  { name: 'wearepublic' },
 ]
 
 export async function seedProviders(db: any): Promise<Record<string, string>> {

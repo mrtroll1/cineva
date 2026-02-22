@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, pgEnum } from 'drizzle-orm/pg-core'
 
-export const venueTypeEnum = pgEnum('venue_type', ['CINEMA', 'MUSEUM'])
+export const venueTypeEnum = pgEnum('venue_type', ['CINEMA', 'MUSEUM', 'PERFORMING_ARTS'])
 
 export const venues = pgTable('venues', {
   id: uuid('id').primaryKey().defaultRandom(),

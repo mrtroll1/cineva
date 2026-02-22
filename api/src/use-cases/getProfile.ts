@@ -3,6 +3,7 @@ import { visitRepository } from '../repositories/visitRepository.js'
 
 const PLACEHOLDER_CINEMA_GENRES = ['Arthouse', 'Drama', 'Sci-Fi', 'Documentary', 'Thriller']
 const PLACEHOLDER_MUSEUM_CATEGORIES = ['Modern Art', 'Photography', 'Old Masters', 'Design', 'Contemporary']
+const PLACEHOLDER_PERFORMING_ARTS_GENRES = ['Theater', 'Jazz', 'Contemporary Dance', 'Spoken Word', 'Indie']
 
 export async function getProfile(userId: string) {
   const user = await userRepository.findById(userId)
@@ -11,9 +12,11 @@ export async function getProfile(userId: string) {
   const providers = (user.linkedProviders ?? {}) as Record<string, string>
   const hasCineville = 'cineville' in providers
   const hasMuseumkaart = 'museumkaart' in providers
+  const hasWeArePublic = 'wearepublic' in providers
 
   let cinemaStats = null
   let museumStats = null
+  let performingArtsStats = null
 
   if (hasCineville) {
     const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'CINEMA')
@@ -39,6 +42,18 @@ export async function getProfile(userId: string) {
     }
   }
 
+  if (hasWeArePublic) {
+    const stats = await visitRepository.getStatsByUserIdAndVenueType(userId, 'PERFORMING_ARTS')
+    performingArtsStats = {
+      visitsCount: stats.visitsCount,
+      monthlyAverage: stats.monthlyAverage,
+      topVenues: stats.topVenues,
+      favoriteGenres: PLACEHOLDER_PERFORMING_ARTS_GENRES,
+      favoriteArtist: 'Internationaal Theater Amsterdam',
+      recentFavorite: 'Cate Le Bon at Paradiso',
+    }
+  }
+
   return {
     user: {
       id: user.id,
@@ -49,5 +64,6 @@ export async function getProfile(userId: string) {
     },
     cinemaStats,
     museumStats,
+    performingArtsStats,
   }
 }

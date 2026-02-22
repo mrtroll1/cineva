@@ -26,10 +26,20 @@ export interface MuseumStats {
   recentFavorite: string
 }
 
+export interface PerformingArtsStats {
+  visitsCount: number
+  monthlyAverage: number
+  topVenues: Array<{ name: string; visits: number }>
+  favoriteGenres: string[]
+  favoriteArtist: string
+  recentFavorite: string
+}
+
 export interface ProfileResponse {
   user: UserProfile
   cinemaStats: CinemaStats | null
   museumStats: MuseumStats | null
+  performingArtsStats: PerformingArtsStats | null
 }
 
 export interface Match {
@@ -115,6 +125,16 @@ export async function ingestMuseumkaart(userId: string, cardNumber: string) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId, cardNumber }),
+  })
+  if (!res.ok) throw new Error('Ingest failed')
+  return res.json()
+}
+
+export async function ingestWeArePublic(userId: string, memberId: string) {
+  const res = await fetch(`${BASE}/ingest/wearepublic`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, memberId }),
   })
   if (!res.ok) throw new Error('Ingest failed')
   return res.json()

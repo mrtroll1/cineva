@@ -36,4 +36,14 @@ export const userRepository = {
       .from(users)
       .where(isNull(users.deletedAt))
   },
+
+  async updateLinkedProvider(userId: string, providerName: string, externalId: string) {
+    await db
+      .update(users)
+      .set({
+        linkedProviders: sql`COALESCE(${users.linkedProviders}, '{}'::jsonb) || ${JSON.stringify({ [providerName]: externalId })}::jsonb`,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+  },
 }

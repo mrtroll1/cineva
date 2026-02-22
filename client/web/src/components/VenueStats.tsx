@@ -10,40 +10,60 @@ import {
   Heart,
   Palette,
   Ticket,
+  Music,
   Send,
   Link as LinkIcon,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { StatBadge } from "@/components/StatBadge"
 import { InvitesList } from "@/components/InvitesList"
-import type { CinemaStats, MuseumStats, Invite } from "@/lib/api"
+import type { CinemaStats, MuseumStats, PerformingArtsStats, Invite } from "@/lib/api"
 
-type ProviderTab = "cineville" | "museumkaart"
+type ProviderTab = "cineville" | "museumkaart" | "wearepublic"
 type Tab = ProviderTab | "invites"
 
 interface VenueStatsProps {
   hasCineville: boolean
   hasMuseumkaart: boolean
+  hasWeArePublic: boolean
   cinemaStats: CinemaStats | null
   museumStats: MuseumStats | null
+  performingArtsStats: PerformingArtsStats | null
   invites: Invite[] | null
   onLinkProvider: (provider: ProviderTab) => void
 }
 
-export function VenueStats({ hasCineville, hasMuseumkaart, cinemaStats, museumStats, invites, onLinkProvider }: VenueStatsProps) {
+export function VenueStats({ hasCineville, hasMuseumkaart, hasWeArePublic, cinemaStats, museumStats, performingArtsStats, invites, onLinkProvider }: VenueStatsProps) {
   const [activeTab, setActiveTab] = useState<Tab | null>(null)
 
   if (activeTab === null) {
     if (hasCineville) setActiveTab("cineville")
     else if (hasMuseumkaart) setActiveTab("museumkaart")
+    else if (hasWeArePublic) setActiveTab("wearepublic")
   }
 
-  const resolvedTab = activeTab ?? (hasCineville ? "cineville" : hasMuseumkaart ? "museumkaart" : null)
+  const resolvedTab = activeTab ?? (hasCineville ? "cineville" : hasMuseumkaart ? "museumkaart" : hasWeArePublic ? "wearepublic" : null)
 
   return (
     <div>
       {/* Tabs */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        {/* Invites tab — first on mobile, hidden on desktop */}
+        {invites && invites.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setActiveTab("invites")}
+            className={`md:hidden inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all cursor-pointer ${
+              resolvedTab === "invites"
+                ? "bg-cineva-100 text-cineva-800 shadow-sm"
+                : "bg-stone-50 text-stone-500 hover:bg-stone-100"
+            }`}
+          >
+            <Send className="h-3 w-3" />
+            Invites
+          </button>
+        )}
+
         {hasCineville ? (
           <button
             type="button"
@@ -92,18 +112,27 @@ export function VenueStats({ hasCineville, hasMuseumkaart, cinemaStats, museumSt
           </button>
         )}
 
-        {invites && invites.length > 0 && (
+        {hasWeArePublic ? (
           <button
             type="button"
-            onClick={() => setActiveTab("invites")}
-            className={`md:hidden inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all cursor-pointer ${
-              resolvedTab === "invites"
+            onClick={() => setActiveTab("wearepublic")}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all cursor-pointer ${
+              resolvedTab === "wearepublic"
                 ? "bg-cineva-100 text-cineva-800 shadow-sm"
                 : "bg-stone-50 text-stone-500 hover:bg-stone-100"
             }`}
           >
-            <Send className="h-3 w-3" />
-            Invites
+            <Music className="h-3 w-3" />
+            We Are Public
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onLinkProvider("wearepublic")}
+            className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-stone-300 px-3 py-1 text-xs font-medium text-stone-400 transition-all hover:border-cineva-300 hover:text-cineva-500 cursor-pointer"
+          >
+            <LinkIcon className="h-3 w-3" />
+            Link We Are Public
           </button>
         )}
       </div>
@@ -201,6 +230,55 @@ export function VenueStats({ hasCineville, hasMuseumkaart, cinemaStats, museumSt
                     </span>
                     <span className="flex-1 text-stone-600">{museum.name}</span>
                     <span className="text-xs font-medium text-stone-400">{museum.visits} visits</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {resolvedTab === "wearepublic" && performingArtsStats && (
+          <motion.div
+            key="performingarts"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <StatBadge icon={Music} label="Events" value={performingArtsStats.visitsCount} delay={0.1} />
+              <StatBadge icon={TrendingUp} label="Monthly Avg" value={performingArtsStats.monthlyAverage} delay={0.15} />
+              <StatBadge icon={Trophy} label="Fav Artist" value={performingArtsStats.favoriteArtist} delay={0.2} />
+              <StatBadge icon={Clapperboard} label="Recent Fave" value={performingArtsStats.recentFavorite} delay={0.25} />
+            </div>
+
+            <div className="rounded-2xl border border-stone-100 bg-white p-4 shadow-sm mb-3">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
+                <Heart className="h-4 w-4 text-cineva-500" />
+                Favorite Genres
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {performingArtsStats.favoriteGenres.slice(0, 3).map((genre: string, i: number) => (
+                  <Badge key={genre} variant={i === 0 ? "warm" : "secondary"}>
+                    {genre}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-stone-100 bg-white p-4 shadow-sm">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
+                <MapPin className="h-4 w-4 text-cineva-500" />
+                Top Venues
+              </h3>
+              <div className="space-y-2">
+                {performingArtsStats.topVenues.map((venue, i) => (
+                  <div key={venue.name} className="flex items-center gap-3 text-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-50 text-xs font-bold text-amber-600">
+                      {i + 1}
+                    </span>
+                    <span className="flex-1 text-stone-600">{venue.name}</span>
+                    <span className="text-xs font-medium text-stone-400">{venue.visits} visits</span>
                   </div>
                 ))}
               </div>
