@@ -3,7 +3,6 @@ import { useNavigate } from "react-router"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   MapPin,
-  Loader2,
   Ticket,
   Landmark,
   Music,
@@ -27,11 +26,10 @@ const PROVIDER_CONFIG: Record<ProviderTab, { title: string; label: string; place
 
 export function Profile() {
   const navigate = useNavigate()
-  const { data, loading, refetch } = useProfile(CURRENT_USER_ID)
+  const { data, loading } = useProfile(CURRENT_USER_ID)
   const { data: invites } = useInvites(CURRENT_USER_ID)
   const [linkModal, setLinkModal] = useState<ProviderTab | null>(null)
   const [linkInput, setLinkInput] = useState("")
-  const [linking, setLinking] = useState(false)
   const [linkedProviders, setLinkedProviders] = useState(() => ({
     cineville: localStorage.getItem('cineva:cineville_linked') === '1',
     museumkaart: localStorage.getItem('cineva:museumkaart_linked') === '1',
@@ -55,14 +53,11 @@ export function Profile() {
 
   const handleLink = () => {
     if (!linkInput.trim() || !linkModal) return
-    setLinking(true)
 
     // All provider linking is localStorage-only (visits are pre-seeded)
     localStorage.setItem(STORAGE_KEYS[linkModal], '1')
     setLinkedProviders((prev) => ({ ...prev, [linkModal]: true }))
     setForceTab(linkModal)
-
-    setLinking(false)
     setLinkModal(null)
     setLinkInput("")
   }
@@ -212,14 +207,10 @@ export function Profile() {
 
               <Button
                 onClick={handleLink}
-                disabled={!linkInput.trim() || linking}
+                disabled={!linkInput.trim()}
                 className="w-full"
               >
-                {linking ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Connect"
-                )}
+                Connect
               </Button>
             </motion.div>
           </motion.div>

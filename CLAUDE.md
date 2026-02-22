@@ -44,24 +44,12 @@ nginx/              — dev + prod nginx configs, prod Dockerfile
 - Mobile-first layout, max-width `max-w-lg` / `max-w-md`
 - API uses `.js` extensions in imports (NodeNext module resolution)
 
-## Running
+## Linting
+
+Always run lints after completing a task:
 
 ```bash
-# Dev (all services with hot-reload)
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up
-docker compose -f docker-compose.yml -f docker-compose.dev.yml exec postgres psql -U cineva -d cineva -c "TRUNCATE user_visits, invites, users, providers, venues RESTART IDENTITY CASCADE"                      
-docker compose -f docker-compose.yml -f docker-compose.dev.yml exec api npm run db:seed 
-
-# Prod
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-docker compose -f docker-compose.yml -f docker-compose.prod.yml exec postgres psql -U cineva -d cineva -c "TRUNCATE user_visits, invites, users, providers, venues RESTART IDENTITY CASCADE;"
-docker compose -f docker-compose.yml -f docker-compose.prod.yml exec api node dist/db/seeds/run.js
-
-# DB migrations + seeds (inside api container)
-npm run db:migrate
-npm run db:seed
+cd api && npx tsc --noEmit
+cd client/web && npx tsc --noEmit
 ```
 
-## Environment
-
-See `.env.example` for all required variables. Copy to `.env` for local dev.
